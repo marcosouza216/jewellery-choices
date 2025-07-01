@@ -16,12 +16,19 @@ Jewellery Choices 珠寶店商品管理操作步驟。
 5. 完成驗證步驟（驗證郵箱等）
 6. 登入您的 GitHub 帳戶
 
-### 第二步：打開 Repository
+### 第二步：申請編輯權限
+
+1. 聯繫倉庫管理員（網站擁有者）
+2. 提供您的 GitHub 用戶名
+3. 管理員會在倉庫設置中添加您為協作者（Collaborator）
+4. 您會收到邀請郵件，點擊接受邀請
+
+### 第三步：打開 Repository
 
 1. 訪問：https://github.com/marcosouza216/jewellery-choices.git
 2. 點擊進入倉庫頁面
 
-### 第三步：修改商品列表
+### 第四步：修改商品列表
 
 #### 方法一：直接在網頁編輯
 
@@ -53,7 +60,7 @@ Jewellery Choices 珠寶店商品管理操作步驟。
 7. 點擊 "Choose your files" 或直接拖拽新的 Excel 文件
 8. 點擊 "Commit changes" 替換原文件
 
-### 第四步：添加商品圖片
+### 第五步：添加商品圖片
 
 #### 方法一：上傳圖片
 
