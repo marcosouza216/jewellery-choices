@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>聯繫方式 - Jewellery Choices</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Cormorant+Garamond:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --nude-dark: #A06D5A;
+      --nude-light: #E8CFC3;
+      --cream: #FDF8F0;
+      --text-dark: #4B2E23;
+      --text-light: #A89F98;
+      --white: #fff;
+    }
+    body {
+      font-family: 'Montserrat', 'Source Han Sans TC', 'Noto Sans TC', sans-serif;
+      color: var(--text-dark);
+      background-color: var(--cream);
+      padding-top: 80px;
+    }
+    h1, .page-title, .navbar-brand {
+      font-family: 'Cinzel', 'Source Han Serif TC', 'Playfair Display', serif;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    h2, h3, .page-subtitle {
+      font-family: 'Source Han Serif TC', 'Cormorant Garamond', serif;
+      font-weight: 500;
+    }
+    .btn, .btn-elegant {
+      font-family: 'Montserrat', 'Source Han Sans TC', 'Noto Sans TC', sans-serif;
+    }
+    .navbar {
+      background: var(--cream) !important;
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid #e2d2c3;
+    }
+    .navbar-brand {
+      font-family: 'Cormorant Garamond', serif !important;
+      font-weight: 300 !important;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      font-size: 1.6rem;
+      color: #A06D5A !important;
+    }
+    .logo-img {
+      max-height: 45px;
+      width: auto;
+      margin-right: 12px;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.08));
+    }
+    .nav-link {
+      font-weight: 500;
+      color: var(--text-dark) !important;
+      margin: 0 10px;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background: var(--nude-dark);
+      transition: all 0.3s ease;
+      transform: translateX(-50%);
+    }
+    .nav-link:hover::after,
+    .nav-link.active::after {
+      width: 100%;
+    }
+    .nav-link:hover {
+      color: var(--nude-dark) !important;
+    }
+    .page-header {
+      background: linear-gradient(135deg, var(--cream) 0%, var(--nude-light) 100%);
+      padding: 80px 0;
+      margin-bottom: 60px;
+      text-align: center;
+      border-radius: 0 0 32px 32px;
+      box-shadow: 0 8px 32px rgba(160,109,90,0.04);
+      position: relative;
+      overflow: hidden;
+    }
+    .page-title {
+      font-family: 'Noto Serif TC', 'Source Han Serif TC', 'Cormorant Garamond', serif !important;
+      font-weight: 300 !important;
+      letter-spacing: 0.08em;
+      font-style: normal;
+      font-size: 3.5rem;
+      color: var(--nude-dark);
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 2;
+    }
+    .page-subtitle, .footer-text, .info-text {
+      font-family: 'Noto Serif TC', 'Source Han Serif TC', 'Cormorant Garamond', serif !important;
+      font-weight: 300 !important;
+      letter-spacing: 0.04em;
+      font-style: normal;
+    }
+    .contact-card {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(160,109,90,0.08);
+      padding: 40px;
+      margin-bottom: 30px;
+      transition: all 0.4s ease;
+      border: 1px solid var(--nude-light);
+      position: relative;
+      overflow: hidden;
+    }
+    .contact-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--nude-dark) 0%, var(--nude-light) 100%);
+    }
+    .contact-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+    }
+    .contact-icon {
+      font-size: 3rem;
+      color: var(--nude-dark);
+      margin-bottom: 25px;
+      transition: all 0.3s ease;
+    }
+    .contact-card:hover .contact-icon {
+      transform: scale(1.1);
+      color: var(--nude-light);
+    }
+    .contact-title {
+      font-size: 1.5rem;
+      color: var(--nude-dark);
+      margin-bottom: 20px;
+    }
+    .contact-text {
+      font-size: 1.1rem;
+      color: var(--text-light);
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+    .contact-highlight {
+      font-weight: 600;
+      color: var(--nude-dark);
+    }
+    .btn-elegant {
+      background: #A06D5A;
+      border: none;
+      color: var(--white);
+      padding: 12px 25px;
+      border-radius: 25px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(160,109,90,0.08);
+    }
+    .btn-elegant:hover {
+      background: #8C5B4A;
+      color: var(--white);
+    }
+    .business-hours {
+      background: var(--cream);
+      border-radius: 15px;
+      padding: 25px;
+      border: 1px solid var(--nude-light);
+    }
+    .hours-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--nude-light);
+      font-weight: 500;
+    }
+    .hours-row:last-child {
+      border-bottom: none;
+    }
+    .hours-day {
+      color: var(--nude-dark);
+    }
+    .hours-time {
+      color: var(--nude-dark);
+      font-weight: 600;
+    }
+    .service-list {
+      list-style: none;
+      padding: 0;
+    }
+    .service-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+    .service-icon {
+      color: var(--nude-dark);
+      font-size: 1.2rem;
+      margin-right: 15px;
+      width: 20px;
+      text-align: center;
+    }
+    .map-container {
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      border: 1px solid var(--nude-light);
+    }
+    .section-title {
+      font-size: 1.8rem;
+      color: var(--nude-dark);
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+    }
+    .section-title i {
+      color: var(--nude-dark);
+      margin-right: 15px;
+      font-size: 1.5rem;
+    }
+    .info-note {
+      font-size: 1rem;
+      color: var(--text-light);
+      font-style: italic;
+      margin-top: 20px;
+      padding: 15px;
+      background: var(--nude-light);
+      border-radius: 10px;
+      border-left: 3px solid var(--nude-dark);
+    }
+    footer {
+      background: var(--cream);
+      color: var(--text-dark);
+      padding: 40px 0;
+      margin-top: 80px;
+      border-top: 1px solid #e2d2c3;
+    }
+    .footer-text {
+      font-size: 1.1rem;
+      color: #A06D5A;
+    }
+    @media (max-width: 768px) {
+      .page-title {
+        font-size: 2.5rem;
+      }
+      .page-subtitle {
+        font-size: 1.2rem;
+      }
+      .contact-card {
+        padding: 30px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light px-4 shadow-sm fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="image/logo.png" alt="Jewellery Choices" class="logo-img">
+        Jewellery Choices
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">主頁</a></li>
+          <li class="nav-item"><a class="nav-link" href="products.html">商品</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">聯繫方式</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="container">
+      <h1 class="page-title">聯繫我們</h1>
+      <p class="page-subtitle">歡迎通過以下方式聯絡我們</p>
+    </div>
+  </div>
+
+  <div class="container my-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-6 mb-4">
+        <div class="contact-card text-center h-100 d-flex flex-column justify-content-center">
+          <div class="contact-icon">
+            <i class="fab fa-instagram"></i>
+          </div>
+          <h4 class="contact-title">Instagram</h4>
+          <p class="contact-text">@jewellery_choices</p>
+          <a href="https://instagram.com/jewellery_choices" target="_blank" class="btn btn-elegant mt-3">
+            <i class="fab fa-instagram me-2"></i>前往 Instagram
+          </a>
+        </div>
+      </div>
+      <div class="col-lg-6 mb-4">
+        <div class="contact-card text-center h-100 d-flex flex-column justify-content-center">
+          <div class="contact-icon">
+            <i class="fab fa-weixin"></i>
+          </div>
+          <h4 class="contact-title">WeChat</h4>
+          <p class="contact-text">JewelleryChoices</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container text-center">
+      <p class="footer-text mb-0">&copy; 2024 Jewellery Choices. 版權所有.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
