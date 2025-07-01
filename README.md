@@ -1,6 +1,7 @@
 # 操作指南
 
 Jewellery Choices 珠寶店商品管理操作步驟。
+影片指南： https://drive.google.com/file/d/1NAq_r6v86i2SDe3EkWu4HVn1DQbJU6tI/view?usp=sharing
 
 ## 🚀 操作步驟
 
