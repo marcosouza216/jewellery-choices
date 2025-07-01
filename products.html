@@ -6,9 +6,13 @@
   <title>商品列表 - Jewellery Choices</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Noto+Serif+TC:wght@500;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/nouislider@15.7.1/dist/nouislider.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Cormorant+Garamond:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/source-han-serif-tc@2.004R/webfonts/SourceHanSerifTC.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/source-han-sans-rounded@2.001R/webfonts/SourceHanSansRoundedTC-ExtraLight.css">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@200&display=swap" rel="stylesheet">
   <style>
     :root {
       --nude-dark: #A06D5A;
@@ -33,6 +37,16 @@
       backdrop-filter: blur(10px);
       border-bottom: 1px solid #e2d2c3;
     }
+
+    .navbar-brand {
+      font-family: 'Cormorant Garamond', serif !important;
+      font-weight: 300 !important;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 1.6rem;
+      color: #A06D5A !important;
+    }
+
     .logo-img {
       max-height: 45px;
       width: auto;
@@ -68,11 +82,13 @@
     .page-header {
       background: linear-gradient(135deg, var(--cream) 0%, var(--nude-light) 100%);
       padding: 60px 0;
-      margin-bottom: 50px;
+      margin-bottom: 10px;
       text-align: center;
       border-radius: 0 0 32px 32px;
       box-shadow: 0 8px 32px rgba(160,109,90,0.04);
       position: relative;
+      padding-top: 110px;
+      padding-bottom: 20px;
     }
 
     /* Banner圖片支持 - 當圖片存在時會覆蓋上面的背景 */
@@ -109,14 +125,24 @@
       color: var(--text-dark);
     }
     .filter-sidebar {
-      background: white;
-      border-radius: 20px;
-      padding: 30px;
-      height: fit-content;
+      background: #FDF8F0;
+      border-radius: 12px;
+      box-shadow: none;
+      border-width: 1px 0;
+      border-style: solid;
+      border-color: #e2d2c3;
+      padding: 0 0 20px 0;
+      margin-bottom: 0;
+      margin-left: -12px;
+      margin-right: -12px;
+      max-height: 50px;
+      overflow: hidden;
+      border-top: 1px solid #e2d2c3;
+      border-bottom: 1px solid #e2d2c3;
+      transition: max-height 0.3s cubic-bezier(.4,0,.2,1);
       position: sticky;
-      top: 100px;
-      box-shadow: 0 10px 30px rgba(160,109,90,0.08);
-      border: 1px solid var(--nude-light);
+      top: 80px;
+      z-index: 1020;
     }
     .filter-title {
       font-family: 'Playfair Display', serif;
@@ -273,6 +299,7 @@
       font-size: 2.2rem;
       color: var(--nude-dark);
       margin: 0;
+      padding-top: 18px;
     }
     .no-products {
       text-align: center;
@@ -305,21 +332,159 @@
     }
     @media (max-width: 768px) {
       .page-title {
-        font-size: 2.2rem;
+        font-size: 2.5rem;
       }
-      .section-title {
-        font-size: 1.8rem;
+      
+      .page-subtitle {
+        font-size: 1rem;
       }
-      .filter-sidebar {
-        margin-bottom: 30px;
-        position: static;
-      }
+      
       .navbar-brand {
-        font-size: 1.2rem;
-        letter-spacing: 0.15em;
+        font-size: 1.6rem;
+        letter-spacing: 0.08em;
       }
+      
       .logo-img {
         max-height: 35px;
+      }
+
+      .filter-sidebar {
+        position: fixed;
+        top: 115px;
+        left: 0;
+        right: 0;
+        width: 100vw;
+        z-index: 1050;
+        background: #FDF8F0;
+        border-radius: 0 0 12px 12px;
+        box-shadow: none;
+        border-width: 1px 0;
+        border-style: solid;
+        border-color: #e2d2c3;
+        padding: 0 0 20px 0;
+        margin: 0;
+        max-height: 50px;
+        overflow: hidden;
+        border-top: 1px solid #e2d2c3;
+        border-bottom: 1px solid #e2d2c3;
+        transition: max-height 0.3s cubic-bezier(.4,0,.2,1);
+      }
+      .filter-sidebar.show {
+        max-height: 1000px;
+        overflow: visible;
+      }
+      .main-product-area {
+        margin-top: 110px;
+      }
+      .filter-header {
+        font-size: 1.15rem;
+        font-weight: 600;
+        color: #a06d5a;
+        letter-spacing: 0.04em;
+        background: none;
+        border: none;
+        box-shadow: none;
+        border-radius: 0;
+        padding: 18px 12px 10px 12px;
+        margin-bottom: 0;
+        cursor: pointer;
+        text-transform: none;
+        display: flex;
+        align-items: center;
+        user-select: none;
+        font-family: 'Playfair Display', serif;
+        justify-content: space-between;
+      }
+      .filter-header .filter-toggle-icon {
+        display: inline-block;
+        margin-left: 0;
+        font-size: 1.2rem;
+        transition: transform 0.3s;
+        color: #a06d5a;
+      }
+      .filter-sidebar.show .filter-header .filter-toggle-icon {
+        transform: rotate(180deg);
+      }
+      .filter-content {
+        padding: 0 12px 10px 12px;
+      }
+      .filter-title {
+        display: none;
+      }
+      .navbar,
+      .navbar .container {
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+      }
+      .page-header {
+        padding-top: 80px;
+        padding-bottom: 80px;
+      }
+      .navbar-toggler {
+        display: none !important;
+      }
+      .navbar-collapse {
+        display: flex !important;
+        flex-basis: auto !important;
+        justify-content: center;
+      }
+      .navbar-nav {
+        flex-direction: row !important;
+        width: 100%;
+        justify-content: space-between;
+      }
+      .nav-item {
+        flex: 1 1 0;
+        text-align: center;
+      }
+      .nav-link {
+        padding: 12px 0 !important;
+        font-size: 1.1rem;
+      }
+    }
+
+    @media (min-width: 769px) {
+      .filter-header {
+        display: none;
+      }
+    }
+
+    /* 新增更小螢幕的樣式 */
+    @media (max-width: 480px) {
+      .col-md-6.col-lg-4 {
+        width: 50%;  /* 一排放兩個，形成2x2布局 */
+        padding: 4px;  /* 適當的間距 */
+      }
+
+      .product-title {
+        font-size: 0.9rem;
+        margin-bottom: 4px;
+        -webkit-line-clamp: 2;  /* 限制標題最多顯示兩行 */
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .price {
+        font-size: 1rem;
+        margin-bottom: 4px;
+      }
+
+      .category-badge {
+        font-size: 0.8rem;
+      }
+
+      .btn-view {
+        padding: 3px 8px;
+        font-size: 0.8rem;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .navbar,
+      .navbar .container {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
       }
     }
     .filter-section input[type="radio"] + .form-check-label {
@@ -376,15 +541,6 @@
       letter-spacing: 0.08em;
     }
     
-    .navbar-brand {
-      font-family: 'Cormorant Garamond', serif !important;
-      font-weight: 300 !important;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      font-size: 1.6rem;
-      color: #A06D5A !important;
-    }
-
     /* 模態框樣式 */
     .modal-content {
       border: none;
@@ -518,6 +674,10 @@
       border-color: var(--primary-color);
       opacity: 0.9;
     }
+
+    .main-product-area {
+      margin-top: 16px;
+    }
   </style>
 </head>
 <body>
@@ -551,67 +711,70 @@
   <div class="container my-5">
     <div class="row">
       <!-- 左側篩選欄 -->
-      <div class="col-lg-3 mb-4">
+      <div class="col-md-3">
         <div class="filter-sidebar">
-          <h5 class="filter-title">
-            <i class="fas fa-filter me-2"></i>篩選商品
-          </h5>
-          <div class="filter-section">
-            <h6 class="filter-section-title">商品類別</h6>
-            <div class="form-check">
-              <input class="form-check-input type-filter" type="checkbox" value="戒指" id="type1">
-              <label class="form-check-label" for="type1">戒指</label>
+          <div class="filter-header">篩選 <span class="filter-toggle-icon">&#9660;</span></div>
+          <div class="filter-content">
+            <h5 class="filter-title">
+              <i class="fas fa-filter me-2"></i>篩選商品
+            </h5>
+            <div class="filter-section">
+              <h6 class="filter-section-title">商品類別</h6>
+              <div class="form-check">
+                <input class="form-check-input type-filter" type="checkbox" value="戒指" id="type1">
+                <label class="form-check-label" for="type1">戒指</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input type-filter" type="checkbox" value="項鍊" id="type2">
+                <label class="form-check-label" for="type2">項鍊</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input type-filter" type="checkbox" value="手鐲" id="type3">
+                <label class="form-check-label" for="type3">手鐲</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input type-filter" type="checkbox" value="耳環" id="type4">
+                <label class="form-check-label" for="type4">耳環</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input type-filter" type="checkbox" value="訂製款式參考" id="type5">
+                <label class="form-check-label" for="type5">訂製款式參考</label>
+              </div>
             </div>
-            <div class="form-check">
-              <input class="form-check-input type-filter" type="checkbox" value="項鍊" id="type2">
-              <label class="form-check-label" for="type2">項鍊</label>
+            <div class="filter-section">
+              <h6 class="filter-section-title">材質</h6>
+              <div class="form-check">
+                <input class="form-check-input style-filter" type="checkbox" value="天然鑽石" id="style1">
+                <label class="form-check-label" for="style1">天然鑽石</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input style-filter" type="checkbox" value="培育鑽石" id="style2">
+                <label class="form-check-label" for="style2">培育鑽石</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input style-filter" type="checkbox" value="天然翡翠" id="style3">
+                <label class="form-check-label" for="style3">天然翡翠</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input style-filter" type="checkbox" value="天然珍珠" id="style4">
+                <label class="form-check-label" for="style4">天然珍珠</label>
+              </div>
             </div>
-            <div class="form-check">
-              <input class="form-check-input type-filter" type="checkbox" value="手鐲" id="type3">
-              <label class="form-check-label" for="type3">手鐲</label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input type-filter" type="checkbox" value="耳環" id="type4">
-              <label class="form-check-label" for="type4">耳環</label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input type-filter" type="checkbox" value="訂製款式參考" id="type5">
-              <label class="form-check-label" for="type5">訂製款式參考</label>
-            </div>
-          </div>
-          <div class="filter-section">
-            <h6 class="filter-section-title">材質</h6>
-            <div class="form-check">
-              <input class="form-check-input style-filter" type="checkbox" value="天然鑽石" id="style1">
-              <label class="form-check-label" for="style1">天然鑽石</label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input style-filter" type="checkbox" value="培育鑽石" id="style2">
-              <label class="form-check-label" for="style2">培育鑽石</label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input style-filter" type="checkbox" value="天然翡翠" id="style3">
-              <label class="form-check-label" for="style3">天然翡翠</label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input style-filter" type="checkbox" value="天然珍珠" id="style4">
-              <label class="form-check-label" for="style4">天然珍珠</label>
-            </div>
-          </div>
-          <hr class="my-4">
-          <div class="filter-section">
-            <h6 class="filter-section-title">價格範圍</h6>
-            <div id="price-slider" style="margin: 30px 10px 10px 10px;"></div>
-            <div class="d-flex justify-content-between mt-2">
-              <span id="priceMinLabel">MOP 0</span>
-              <span id="priceMaxLabel">MOP 2000</span>
+            <hr class="my-4">
+            <div class="filter-section">
+              <h6 class="filter-section-title">價格範圍</h6>
+              <div id="price-slider" style="margin: 30px 10px 10px 10px;"></div>
+              <div class="d-flex justify-content-between mt-2">
+                <span id="priceMinLabel">MOP 0</span>
+                <span id="priceMaxLabel">MOP 2000</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       <!-- 右側商品展示區 -->
-      <div class="col-lg-9">
+      <div class="col-lg-9 main-product-area">
         <div class="section-header">
           <h2 class="section-title">商品陳列</h2>
           <span class="product-count" id="product-count">共 3 件商品</span>
@@ -964,11 +1127,6 @@
               <h5 class="product-title">${p.name}</h5>
               <p class="price">MOP ${p.price}</p>
               <span class="category-badge">${p.category}｜${p.style || ''}</span>
-              <div class="mt-auto">
-                <button class="btn btn-view btn-sm" onclick="event.stopPropagation(); showProductDetail(${p.id})">
-                  <i class="fas fa-eye me-1"></i>查看詳情
-                </button>
-              </div>
             </div>
           </div>
         `;
@@ -1043,6 +1201,14 @@
       });
 
       loadProducts();
+    });
+
+    // 修改篩選面板控制
+    const filterSidebar = document.querySelector('.filter-sidebar');
+    const filterHeader = document.querySelector('.filter-header');
+
+    filterHeader.addEventListener('click', () => {
+      filterSidebar.classList.toggle('show');
     });
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

@@ -80,7 +80,7 @@
 
     .hero-subtitle {
       color: var(--text-dark);
-      font-size: 1.3rem;
+      font-size: 1.1rem;
       margin-bottom: 36px;
     }
 
@@ -159,6 +159,15 @@
       background: var(--cream) !important;
       backdrop-filter: blur(10px);
       border-bottom: 1px solid #e2d2c3;
+    }
+
+    .navbar-brand {
+      font-family: 'Cormorant Garamond', serif !important;
+      font-weight: 300 !important;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 1.6rem;
+      color: #A06D5A !important;
     }
 
     .logo-img {
@@ -246,7 +255,7 @@
       }
       
       .hero-subtitle {
-        font-size: 1.2rem;
+        font-size: 1rem;
       }
       
       .feature-card {
@@ -254,12 +263,33 @@
       }
       
       .navbar-brand {
-        font-size: 1.2rem;
-        letter-spacing: 0.15em;
+        font-size: 1.6rem;
+        letter-spacing: 0.08em;
       }
       
       .logo-img {
         max-height: 35px;
+      }
+      .navbar-toggler {
+        display: none !important;
+      }
+      .navbar-collapse {
+        display: flex !important;
+        flex-basis: auto !important;
+        justify-content: center;
+      }
+      .navbar-nav {
+        flex-direction: row !important;
+        width: 100%;
+        justify-content: space-between;
+      }
+      .nav-item {
+        flex: 1 1 0;
+        text-align: center;
+      }
+      .nav-link {
+        padding: 12px 0 !important;
+        font-size: 1.1rem;
       }
     }
 
@@ -277,14 +307,12 @@
       font-style: normal;
     }
 
-    /* 導覽列品牌名字體設定（與 contact.html 完全一致） */
-    .navbar-brand {
-      font-family: 'Cormorant Garamond', serif !important;
-      font-weight: 300 !important;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      font-size: 1.6rem;
-      color: #A06D5A !important;
+    @media (max-width: 576px) {
+      .navbar,
+      .navbar .container {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+      }
     }
   </style>
 </head>
@@ -312,9 +340,9 @@
     <div class="container text-center hero-content">
       <img src="image/logo.png" alt="Jewellery Choices" class="hero-logo">
       <h1 class="hero-title">澳門輕珠寶品牌</h1>
-      <p class="hero-subtitle mb-4">有定製飾品服務<br>天然鑽石寶石｜培育鑽｜天然翡翠｜天然珍珠｜18K金</p>
+      <p class="hero-subtitle mb-4">有定製飾品服務<br>天然鑽石寶石｜天然翡翠｜天然珍珠｜18K金</p>
       <div class="mb-3" style="font-size:1.1rem;color:var(--text-dark);font-family:'Montserrat',sans-serif;">
-        <span style="display:inline-block;margin-bottom:4px;">☎️客服：IG: @jewellery_choices / WeChat: JewelleryChoices</span><br>
+        <span style="display:inline-block;margin-bottom:4px;">☎️客服： IG: @jewellery_choices<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;WeChat: JewelleryChoices</span><br>
         <span style="display:inline-block;">🚚全澳免費送貨｜順豐$1800包郵</span>
       </div>
       <a href="products.html" class="btn btn-elegant">

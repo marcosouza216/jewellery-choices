@@ -22,7 +22,7 @@
       background-color: var(--cream);
       padding-top: 80px;
     }
-    h1, .page-title, .navbar-brand {
+    h1, .page-title {
       font-family: 'Cinzel', 'Source Han Serif TC', 'Playfair Display', serif;
       font-weight: 700;
       letter-spacing: 1px;
@@ -276,20 +276,48 @@
     }
     @media (max-width: 768px) {
       .page-title {
-        font-size: 2.2rem;
+        font-size: 2.5rem;
       }
       .page-subtitle {
-        font-size: 1.2rem;
+        font-size: 1rem;
       }
       .contact-card {
         padding: 30px 20px;
       }
       .navbar-brand {
-        font-size: 1.2rem;
-        letter-spacing: 0.15em;
+        font-size: 1.6rem;
+        letter-spacing: 0.08em;
       }
       .logo-img {
         max-height: 35px;
+      }
+      .navbar-toggler {
+        display: none !important;
+      }
+      .navbar-collapse {
+        display: flex !important;
+        flex-basis: auto !important;
+        justify-content: center;
+      }
+      .navbar-nav {
+        flex-direction: row !important;
+        width: 100%;
+        justify-content: space-between;
+      }
+      .nav-item {
+        flex: 1 1 0;
+        text-align: center;
+      }
+      .nav-link {
+        padding: 12px 0 !important;
+        font-size: 1.1rem;
+      }
+    }
+    @media (max-width: 576px) {
+      .navbar,
+      .navbar .container {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
       }
     }
   </style>
