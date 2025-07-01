@@ -891,26 +891,53 @@
 
 
     // 自動根據商品名稱生成圖片路徑
-    function getImagePath(productName) {
-      // 優先檢查主圖片 PNG 格式
-      return `image/product_images/${productName}.png`;
+    async function getImagePath(productName) {
+      // 優先檢查商品名稱-1.jpg 作為主圖片
+      const imagePath1 = `image/product_images/${productName}-1.jpg`;
+      if (await checkImageExists(imagePath1)) {
+        return imagePath1;
+      }
+      
+      // 如果沒有-1.jpg，檢查商品名稱.jpg
+      const imagePathMain = `image/product_images/${productName}.jpg`;
+      if (await checkImageExists(imagePathMain)) {
+        return imagePathMain;
+      }
+      
+      // 如果沒有.jpg，檢查PNG格式
+      const imagePath1Png = `image/product_images/${productName}-1.png`;
+      if (await checkImageExists(imagePath1Png)) {
+        return imagePath1Png;
+      }
+      
+      const imagePathMainPng = `image/product_images/${productName}.png`;
+      if (await checkImageExists(imagePathMainPng)) {
+        return imagePathMainPng;
+      }
+      
+      // 如果都沒有，返回預設圖片
+      return 'image/placeholder.svg';
     }
 
     // 處理圖片載入錯誤，按順序嘗試不同格式
     function handleImageError(img, productName) {
       const currentSrc = img.src;
       
-      if (currentSrc.includes(`${productName}.png`)) {
-        // 主圖片PNG不存在，嘗試主圖片JPG
+      if (currentSrc.includes(`${productName}-1.jpg`)) {
+        // -1.jpg不存在，嘗試商品名稱.jpg
         img.src = `image/product_images/${productName}.jpg`;
       } else if (currentSrc.includes(`${productName}.jpg`)) {
-        // 主圖片JPG不存在，嘗試編號圖片PNG
+        // 商品名稱.jpg不存在，嘗試-1.png
         img.src = `image/product_images/${productName}-1.png`;
       } else if (currentSrc.includes(`${productName}-1.png`)) {
-        // 編號圖片PNG不存在，嘗試編號圖片JPG
-        img.src = `image/product_images/${productName}-1.jpg`;
-      } else {
+        // -1.png不存在，嘗試商品名稱.png
+        img.src = `image/product_images/${productName}.png`;
+      } else if (currentSrc.includes(`${productName}.png`)) {
         // 所有格式都不存在，使用預設圖片
+        img.src = 'image/placeholder.svg';
+        img.onerror = null;
+      } else {
+        // 其他情況，使用預設圖片
         img.src = 'image/placeholder.svg';
         img.onerror = null;
       }
@@ -1103,24 +1130,34 @@
           // 獲取數據行
           const rows = jsonData.slice(1);
           
-          // 轉換為對象數組
-          allProducts = rows
-            .filter(row => row[0] && row[1]) // 過濾掉空行
-            .map(row => {
-              const product = {};
-              headers.forEach((header, index) => {
-                product[header] = row[index] || '';
-              });
-              return {
-                ...product,
-                image: getImagePath(product.name), // 自動生成圖片路徑
-                price: parseFloat(product.price) || 0,
-              };
-            });
+          // 轉換為對象數組並處理圖片路徑
+          const processProducts = async () => {
+            const processedProducts = [];
+            for (const row of rows) {
+              if (row[0] && row[1]) { // 過濾掉空行
+                const product = {};
+                headers.forEach((header, index) => {
+                  product[header] = row[index] || '';
+                });
+                
+                // 異步獲取圖片路徑
+                const imagePath = await getImagePath(product.name);
+                
+                processedProducts.push({
+                  ...product,
+                  image: imagePath,
+                  price: parseFloat(product.price) || 0,
+                });
+              }
+            }
+            
+            allProducts = processedProducts;
+            renderProducts(allProducts);
+            updateProductCount(allProducts.length);
+            filterProducts();
+          };
           
-          renderProducts(allProducts);
-          updateProductCount(allProducts.length);
-          filterProducts();
+          processProducts();
         })
         .catch(error => {
           console.error('從本地Excel載入商品資料失敗:', error);
