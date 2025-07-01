@@ -885,7 +885,7 @@
     // 頁面載入後檢測圖片
     document.addEventListener('DOMContentLoaded', checkBannerImage);
 
-    const csvUrl = 'products_excel.csv'; // 改為本地CSV文件
+    const excelUrl = 'products.xlsx'; // 改為本地Excel文件
     let allProducts = [];
 
 
@@ -1085,35 +1085,54 @@
     }
 
     function loadProducts() {
-      Papa.parse(csvUrl, {
-        download: true,
-        header: true,
-        skipEmptyLines: true,
-        complete: function(results) {
-          allProducts = results.data
-            .filter(p => p.id && p.name)
-            .map(p => ({
-              ...p,
-              image: getImagePath(p.name), // 自動生成圖片路徑
-              price: parseFloat(p.price) || 0,
-            }));
+      fetch(excelUrl)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('無法載入Excel文件');
+          }
+          return response.arrayBuffer();
+        })
+        .then(data => {
+          const workbook = XLSX.read(data, { type: 'array' });
+          const sheetName = workbook.SheetNames[0]; // 讀取第一個工作表
+          const worksheet = workbook.Sheets[sheetName];
+          const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+          
+          // 獲取標題行
+          const headers = jsonData[0];
+          // 獲取數據行
+          const rows = jsonData.slice(1);
+          
+          // 轉換為對象數組
+          allProducts = rows
+            .filter(row => row[0] && row[1]) // 過濾掉空行
+            .map(row => {
+              const product = {};
+              headers.forEach((header, index) => {
+                product[header] = row[index] || '';
+              });
+              return {
+                ...product,
+                image: getImagePath(product.name), // 自動生成圖片路徑
+                price: parseFloat(product.price) || 0,
+              };
+            });
           
           renderProducts(allProducts);
           updateProductCount(allProducts.length);
-          filterProducts(); 
-        },
-        error: function(err) {
-          console.error('從本地CSV載入商品資料失敗:', err);
+          filterProducts();
+        })
+        .catch(error => {
+          console.error('從本地Excel載入商品資料失敗:', error);
           const container = document.getElementById('product-container');
           container.innerHTML = `
             <div class="col-12">
               <div class="no-products">
                 <div class="no-products-icon"><i class="fas fa-exclamation-triangle"></i></div>
-                <h4 class="no-products-text">無法載入商品資料，請檢查CSV文件是否存在。</h4>
+                <h4 class="no-products-text">無法載入商品資料，請檢查Excel文件是否存在。</h4>
               </div>
             </div>`;
-        }
-      });
+        });
     }
 
     function renderProducts(list) {
@@ -1234,5 +1253,6 @@
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/nouislider@15.7.1/dist/nouislider.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </body>
 </html>
