@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Noto+Serif+TC:wght@500;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/nouislider@15.7.1/dist/nouislider.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Cormorant+Garamond:wght@300;400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Cormorant+Garamond:wght@300;400;700&family=Dancing+Script:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/source-han-serif-tc@2.004R/webfonts/SourceHanSerifTC.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/source-han-sans-rounded@2.001R/webfonts/SourceHanSansRoundedTC-ExtraLight.css">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@200&display=swap" rel="stylesheet">
@@ -28,7 +28,7 @@
       background-color: var(--cream);
       padding-top: 80px;
     }
-    h1, h2, h3, h4, h5, h6 {
+    h2, h3, h4, h5, h6 {
       font-family: 'Playfair Display', serif;
       font-weight: 500;
     }
@@ -84,11 +84,11 @@
       padding: 60px 0;
       margin-bottom: 10px;
       text-align: center;
-      border-radius: 0 0 32px 32px;
+      border-radius: 0 !important;
       box-shadow: 0 8px 32px rgba(160,109,90,0.04);
       position: relative;
-      padding-top: 110px;
-      padding-bottom: 20px;
+      padding-top: 80px;
+      padding-bottom: 60px;
     }
 
     /* Banner圖片支持 - 當圖片存在時會覆蓋上面的背景 */
@@ -105,14 +105,14 @@
       right: 0;
       bottom: 0;
       background: linear-gradient(135deg, rgba(253,248,240,0.15) 0%, rgba(232,207,195,0.2) 100%);
-      border-radius: 0 0 32px 32px;
+      border-radius: 0 !important;
     }
     .page-title {
-      font-family: 'Noto Serif TC', 'Source Han Serif TC', 'Cormorant Garamond', serif !important;
-      font-weight: 300 !important;
-      letter-spacing: 0.08em;
+      font-family: 'Dancing Script', cursive !important;
+      font-weight: 400 !important;
+      letter-spacing: 0.02em;
       font-style: normal;
-      font-size: 3rem;
+      font-size: 3.5rem;
       color: var(--nude-dark);
       margin-bottom: 15px;
     }
@@ -126,7 +126,7 @@
     }
     .filter-sidebar {
       background: #FDF8F0;
-      border-radius: 12px;
+      border-radius: 0 !important;
       box-shadow: none;
       border-width: 1px 0;
       border-style: solid;
@@ -200,7 +200,7 @@
     }
     .product-card {
       border: none;
-      border-radius: 20px;
+      border-radius: 0 !important;
       box-shadow: 0 10px 30px rgba(160,109,90,0.08);
       transition: all 0.4s ease;
       height: 100%;
@@ -227,7 +227,7 @@
       width: 100%;
       aspect-ratio: 1/1;
       object-fit: cover;
-      border-radius: 20px 20px 0 0;
+      border-radius: 0 !important;
       background: var(--nude-light);
       display: block;
       transition: transform 0.3s;
@@ -257,7 +257,7 @@
       background: none;
       color: var(--text-light);
       padding: 0;
-      border-radius: 0;
+      border-radius: 0 !important;
       font-size: 0.95rem;
       font-weight: 400;
       display: block;
@@ -271,7 +271,7 @@
       font-family: 'Montserrat', sans-serif;
       font-weight: 500;
       padding: 12px 25px;
-      border-radius: 25px;
+      border-radius: 0 !important;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       transition: all 0.3s ease;
@@ -321,6 +321,7 @@
       padding: 40px 0;
       margin-top: 80px;
       border-top: 1px solid #e2d2c3;
+      border-radius: 0 !important;
     }
     .footer-text {
       font-family: 'Noto Serif TC', 'Source Han Serif TC', 'Cormorant Garamond', serif !important;
@@ -417,7 +418,7 @@
         padding-right: 16px !important;
       }
       .page-header {
-        padding-top: 80px;
+        padding-top: 130px;
         padding-bottom: 80px;
       }
       .navbar-toggler {
@@ -444,8 +445,26 @@
     }
 
     @media (min-width: 769px) {
+      .filter-sidebar {
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(160,109,90,0.08);
+        border: 1px solid #E8CFC3;
+        padding: 30px;
+        height: fit-content;
+        position: sticky;
+        top: 100px;
+        margin: 0;
+        max-width: 100%;
+        max-height: none;
+        overflow: visible;
+        transition: none;
+      }
       .filter-header {
         display: none;
+      }
+      .filter-content {
+        display: block !important;
       }
     }
 
@@ -505,7 +524,7 @@
       border: 2px solid var(--nude-light);
       width: 20px;
       height: 20px;
-      border-radius: 6px;
+      border-radius: 0 !important;
       position: absolute;
       left: 0;
       top: 2px;
@@ -544,7 +563,7 @@
     /* 模態框樣式 */
     .modal-content {
       border: none;
-      border-radius: 20px;
+      border-radius: 0 !important;
       box-shadow: 0 20px 60px rgba(160,109,90,0.15);
     }
 
@@ -703,8 +722,7 @@
 
   <div class="page-header">
     <div class="container">
-      <h1 class="page-title">精選珠寶</h1>
-      <p class="page-subtitle">發現屬於您的獨特魅力</p>
+      <h1 class="page-title">We make beautiful jewellery choices for you</h1>
     </div>
   </div>
 
@@ -715,58 +733,58 @@
         <div class="filter-sidebar">
           <div class="filter-header">篩選 <span class="filter-toggle-icon">&#9660;</span></div>
           <div class="filter-content">
-            <h5 class="filter-title">
-              <i class="fas fa-filter me-2"></i>篩選商品
-            </h5>
-            <div class="filter-section">
+          <h5 class="filter-title">
+            <i class="fas fa-filter me-2"></i>篩選商品
+          </h5>
+          <div class="filter-section">
               <h6 class="filter-section-title">商品類別</h6>
-              <div class="form-check">
+            <div class="form-check">
                 <input class="form-check-input type-filter" type="checkbox" value="戒指" id="type1">
                 <label class="form-check-label" for="type1">戒指</label>
-              </div>
-              <div class="form-check">
+            </div>
+            <div class="form-check">
                 <input class="form-check-input type-filter" type="checkbox" value="項鍊" id="type2">
                 <label class="form-check-label" for="type2">項鍊</label>
-              </div>
-              <div class="form-check">
+            </div>
+            <div class="form-check">
                 <input class="form-check-input type-filter" type="checkbox" value="手鐲" id="type3">
                 <label class="form-check-label" for="type3">手鐲</label>
-              </div>
-              <div class="form-check">
+            </div>
+            <div class="form-check">
                 <input class="form-check-input type-filter" type="checkbox" value="耳環" id="type4">
                 <label class="form-check-label" for="type4">耳環</label>
               </div>
               <div class="form-check">
                 <input class="form-check-input type-filter" type="checkbox" value="訂製款式參考" id="type5">
                 <label class="form-check-label" for="type5">訂製款式參考</label>
-              </div>
             </div>
-            <div class="filter-section">
+          </div>
+          <div class="filter-section">
               <h6 class="filter-section-title">材質</h6>
-              <div class="form-check">
+            <div class="form-check">
                 <input class="form-check-input style-filter" type="checkbox" value="天然鑽石" id="style1">
                 <label class="form-check-label" for="style1">天然鑽石</label>
-              </div>
-              <div class="form-check">
+            </div>
+            <div class="form-check">
                 <input class="form-check-input style-filter" type="checkbox" value="培育鑽石" id="style2">
                 <label class="form-check-label" for="style2">培育鑽石</label>
-              </div>
-              <div class="form-check">
+            </div>
+            <div class="form-check">
                 <input class="form-check-input style-filter" type="checkbox" value="天然翡翠" id="style3">
                 <label class="form-check-label" for="style3">天然翡翠</label>
-              </div>
-              <div class="form-check">
+            </div>
+            <div class="form-check">
                 <input class="form-check-input style-filter" type="checkbox" value="天然珍珠" id="style4">
                 <label class="form-check-label" for="style4">天然珍珠</label>
-              </div>
             </div>
-            <hr class="my-4">
-            <div class="filter-section">
-              <h6 class="filter-section-title">價格範圍</h6>
-              <div id="price-slider" style="margin: 30px 10px 10px 10px;"></div>
-              <div class="d-flex justify-content-between mt-2">
-                <span id="priceMinLabel">MOP 0</span>
-                <span id="priceMaxLabel">MOP 2000</span>
+          </div>
+          <hr class="my-4">
+          <div class="filter-section">
+            <h6 class="filter-section-title">價格範圍</h6>
+            <div id="price-slider" style="margin: 30px 10px 10px 10px;"></div>
+            <div class="d-flex justify-content-between mt-2">
+              <span id="priceMinLabel">MOP 0</span>
+              <span id="priceMaxLabel">MOP 2000</span>
               </div>
             </div>
           </div>
@@ -1203,13 +1221,16 @@
       loadProducts();
     });
 
-    // 修改篩選面板控制
-    const filterSidebar = document.querySelector('.filter-sidebar');
-    const filterHeader = document.querySelector('.filter-header');
-
-    filterHeader.addEventListener('click', () => {
-      filterSidebar.classList.toggle('show');
-    });
+    // 僅在手機版啟用展開/收起功能
+    if (window.innerWidth <= 768) {
+      const filterSidebar = document.querySelector('.filter-sidebar');
+      const filterHeader = document.querySelector('.filter-header');
+      if (filterHeader) {
+        filterHeader.addEventListener('click', () => {
+          filterSidebar.classList.toggle('show');
+        });
+      }
+    }
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/nouislider@15.7.1/dist/nouislider.min.js"></script>
