@@ -37,6 +37,24 @@
       text-align: center;
       border-radius: 0 0 32px 32px;
       box-shadow: 0 8px 32px rgba(160,109,90,0.04);
+      position: relative;
+    }
+
+    /* Banner圖片支持 - 當圖片存在時會覆蓋上面的背景 */
+    .hero-section.with-banner {
+      background: linear-gradient(135deg, rgba(253,248,240,0.6) 0%, rgba(232,207,195,0.6) 100%), 
+                  url('image/banner.png') center/cover no-repeat;
+    }
+
+    .hero-section.with-banner::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(253,248,240,0.15) 0%, rgba(232,207,195,0.2) 100%);
+      border-radius: 0 0 32px 32px;
     }
 
     .hero-content {
@@ -61,7 +79,7 @@
     }
 
     .hero-subtitle {
-      color: var(--text-light);
+      color: var(--text-dark);
       font-size: 1.3rem;
       margin-bottom: 36px;
     }
@@ -234,6 +252,15 @@
       .feature-card {
         padding: 40px 20px;
       }
+      
+      .navbar-brand {
+        font-size: 1.2rem;
+        letter-spacing: 0.15em;
+      }
+      
+      .logo-img {
+        max-height: 35px;
+      }
     }
 
     .brand-zh {
@@ -272,11 +299,11 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
+      <ul class="navbar-nav ms-auto">
           <li class="nav-item"><a class="nav-link" href="index.html">主頁</a></li>
-          <li class="nav-item"><a class="nav-link" href="products.html">商品</a></li>
-          <li class="nav-item"><a class="nav-link" href="contact.html">聯繫方式</a></li>
-        </ul>
+        <li class="nav-item"><a class="nav-link" href="products.html">商品</a></li>
+        <li class="nav-item"><a class="nav-link" href="contact.html">聯繫方式</a></li>
+      </ul>
       </div>
     </div>
   </nav>
@@ -298,11 +325,34 @@
 
   <footer>
     <div class="container text-center">
-      <p class="footer-text mb-0">&copy; 2024 Jewellery Choices. 版權所有.</p>
+      
     </div>
   </footer>
 
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script>
+    // 檢測Banner圖片是否存在
+    function checkBannerImage() {
+      const heroSection = document.querySelector('.hero-section');
+      const img = new Image();
+      
+      img.onload = function() {
+        // 圖片存在，添加with-banner類
+        heroSection.classList.add('with-banner');
+      };
+      
+      img.onerror = function() {
+        // 圖片不存在，保持原始渐变背景
+        console.log('Banner圖片不存在，使用默認背景');
+      };
+      
+      img.src = 'image/banner.png';
+    }
+    
+    // 頁面載入後檢測圖片
+    document.addEventListener('DOMContentLoaded', checkBannerImage);
+  </script>
 </body>
 </html>

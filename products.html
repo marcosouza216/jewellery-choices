@@ -72,6 +72,24 @@
       text-align: center;
       border-radius: 0 0 32px 32px;
       box-shadow: 0 8px 32px rgba(160,109,90,0.04);
+      position: relative;
+    }
+
+    /* Banner圖片支持 - 當圖片存在時會覆蓋上面的背景 */
+    .page-header.with-banner {
+      background: linear-gradient(135deg, rgba(253,248,240,0.6) 0%, rgba(232,207,195,0.6) 100%), 
+                  url('image/banner.png') center/cover no-repeat;
+    }
+
+    .page-header.with-banner::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(253,248,240,0.15) 0%, rgba(232,207,195,0.2) 100%);
+      border-radius: 0 0 32px 32px;
     }
     .page-title {
       font-family: 'Noto Serif TC', 'Source Han Serif TC', 'Cormorant Garamond', serif !important;
@@ -88,7 +106,7 @@
       letter-spacing: 0.04em;
       font-style: normal;
       font-size: 1.3rem;
-      color: var(--text-light);
+      color: var(--text-dark);
     }
     .filter-sidebar {
       background: white;
@@ -163,6 +181,7 @@
       background: white;
       overflow: hidden;
       position: relative;
+      cursor: pointer;
     }
     .product-card::before {
       content: '';
@@ -295,6 +314,13 @@
         margin-bottom: 30px;
         position: static;
       }
+      .navbar-brand {
+        font-size: 1.2rem;
+        letter-spacing: 0.15em;
+      }
+      .logo-img {
+        max-height: 35px;
+      }
     }
     .filter-section input[type="radio"] + .form-check-label {
       position: relative;
@@ -358,6 +384,140 @@
       font-size: 1.6rem;
       color: #A06D5A !important;
     }
+
+    /* 模態框樣式 */
+    .modal-content {
+      border: none;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(160,109,90,0.15);
+    }
+
+    .modal-header {
+      padding: 25px 25px 0 25px;
+    }
+
+    .modal-title {
+      font-family: 'Noto Serif TC', 'Source Han Serif TC', 'Cormorant Garamond', serif !important;
+      font-weight: 500 !important;
+      font-size: 1.8rem;
+      color: var(--nude-dark);
+    }
+
+    .product-detail-image-container {
+      position: relative;
+      border-radius: 15px;
+      overflow: hidden;
+      background: var(--nude-light);
+    }
+
+    .product-detail-image {
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .product-detail-image:hover {
+      transform: scale(1.05);
+    }
+
+    .product-detail-title {
+      font-family: 'Noto Serif TC', 'Source Han Serif TC', 'Cormorant Garamond', serif !important;
+      font-weight: 500 !important;
+      font-size: 2.2rem;
+      color: var(--nude-dark);
+      margin-bottom: 15px;
+    }
+
+    .product-detail-price {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--nude-dark);
+      margin-bottom: 20px;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .product-detail-meta .badge {
+      font-size: 0.9rem;
+      padding: 8px 15px;
+      border-radius: 20px;
+    }
+
+    .bg-outline-secondary {
+      background: transparent !important;
+      border: 2px solid var(--nude-light) !important;
+      color: var(--text-dark) !important;
+    }
+
+    .description-text {
+      font-size: 1.1rem;
+      line-height: 1.7;
+      color: var(--text-dark);
+      font-family: 'Source Han Serif TC', 'Cormorant Garamond', serif;
+    }
+
+    .product-detail-description h6 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      color: var(--nude-dark);
+      font-size: 1.2rem;
+    }
+
+    /* 輪播樣式 */
+    .product-detail-image-container .carousel {
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .product-detail-image-container .carousel-control-prev,
+    .product-detail-image-container .carousel-control-next {
+      width: 40px;
+      height: 40px;
+      background-color: rgba(0,0,0,0.5);
+      border-radius: 50%;
+      top: 50%;
+      transform: translateY(-50%);
+      border: none;
+    }
+
+    .product-detail-image-container .carousel-control-prev {
+      left: 10px;
+    }
+
+    .product-detail-image-container .carousel-control-next {
+      right: 10px;
+    }
+
+    .product-detail-image-container .carousel-control-prev:hover,
+    .product-detail-image-container .carousel-control-next:hover {
+      background-color: rgba(0,0,0,0.7);
+    }
+
+    .product-detail-image-container .carousel-indicators {
+      justify-content: center;
+      margin-bottom: 0;
+    }
+
+    .product-detail-image-container .carousel-indicators button {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin: 0 3px;
+      background-color: rgba(255,255,255,0.6);
+      border: 1px solid rgba(0,0,0,0.2);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .product-detail-image-container .carousel-indicators button:hover {
+      background-color: rgba(255,255,255,0.8);
+    }
+
+    .product-detail-image-container .carousel-indicators button.active {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+      opacity: 0.9;
+    }
   </style>
 </head>
 <body>
@@ -372,11 +532,11 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
+      <ul class="navbar-nav ms-auto">
           <li class="nav-item"><a class="nav-link" href="index.html">主頁</a></li>
           <li class="nav-item"><a class="nav-link" href="products.html">商品</a></li>
-          <li class="nav-item"><a class="nav-link" href="contact.html">聯繫方式</a></li>
-        </ul>
+        <li class="nav-item"><a class="nav-link" href="contact.html">聯繫方式</a></li>
+      </ul>
       </div>
     </div>
   </nav>
@@ -397,45 +557,45 @@
             <i class="fas fa-filter me-2"></i>篩選商品
           </h5>
           <div class="filter-section">
-            <h6 class="filter-section-title">種類</h6>
+            <h6 class="filter-section-title">商品類別</h6>
             <div class="form-check">
-              <input class="form-check-input type-filter" type="checkbox" value="天然鑽石" id="type1">
-              <label class="form-check-label" for="type1">天然鑽石</label>
+              <input class="form-check-input type-filter" type="checkbox" value="戒指" id="type1">
+              <label class="form-check-label" for="type1">戒指</label>
             </div>
             <div class="form-check">
-              <input class="form-check-input type-filter" type="checkbox" value="培育鑽石" id="type2">
-              <label class="form-check-label" for="type2">培育鑽石</label>
+              <input class="form-check-input type-filter" type="checkbox" value="項鍊" id="type2">
+              <label class="form-check-label" for="type2">項鍊</label>
             </div>
             <div class="form-check">
-              <input class="form-check-input type-filter" type="checkbox" value="天然翡翠" id="type3">
-              <label class="form-check-label" for="type3">天然翡翠</label>
+              <input class="form-check-input type-filter" type="checkbox" value="手鐲" id="type3">
+              <label class="form-check-label" for="type3">手鐲</label>
             </div>
             <div class="form-check">
-              <input class="form-check-input type-filter" type="checkbox" value="天然珍珠" id="type4">
-              <label class="form-check-label" for="type4">天然珍珠</label>
+              <input class="form-check-input type-filter" type="checkbox" value="耳環" id="type4">
+              <label class="form-check-label" for="type4">耳環</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input type-filter" type="checkbox" value="訂製款式參考" id="type5">
+              <label class="form-check-label" for="type5">訂製款式參考</label>
             </div>
           </div>
           <div class="filter-section">
-            <h6 class="filter-section-title">款式</h6>
+            <h6 class="filter-section-title">材質</h6>
             <div class="form-check">
-              <input class="form-check-input style-filter" type="checkbox" value="頸鏈" id="style1">
-              <label class="form-check-label" for="style1">頸鏈</label>
+              <input class="form-check-input style-filter" type="checkbox" value="天然鑽石" id="style1">
+              <label class="form-check-label" for="style1">天然鑽石</label>
             </div>
             <div class="form-check">
-              <input class="form-check-input style-filter" type="checkbox" value="耳環" id="style2">
-              <label class="form-check-label" for="style2">耳環</label>
+              <input class="form-check-input style-filter" type="checkbox" value="培育鑽石" id="style2">
+              <label class="form-check-label" for="style2">培育鑽石</label>
             </div>
             <div class="form-check">
-              <input class="form-check-input style-filter" type="checkbox" value="戒指" id="style3">
-              <label class="form-check-label" for="style3">戒指</label>
+              <input class="form-check-input style-filter" type="checkbox" value="天然翡翠" id="style3">
+              <label class="form-check-label" for="style3">天然翡翠</label>
             </div>
             <div class="form-check">
-              <input class="form-check-input style-filter" type="checkbox" value="手鐲" id="style4">
-              <label class="form-check-label" for="style4">手鐲</label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input style-filter" type="checkbox" value="訂製款式參考" id="style5">
-              <label class="form-check-label" for="style5">訂製款式參考</label>
+              <input class="form-check-input style-filter" type="checkbox" value="天然珍珠" id="style4">
+              <label class="form-check-label" for="style4">天然珍珠</label>
             </div>
           </div>
           <hr class="my-4">
@@ -464,29 +624,287 @@
     </div>
   </div>
 
+  <!-- 商品詳情模態框 -->
+  <div class="modal fade" id="productDetailModal" tabindex="-1" aria-labelledby="productDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0">
+          <h5 class="modal-title" id="productDetailModalLabel">商品詳情</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4">
+          <div class="row">
+            <div class="col-md-6 mb-4">
+              <div class="product-detail-image-container">
+                <!-- 圖片輪播 -->
+                <div id="productImageCarousel" class="carousel slide" data-bs-ride="carousel">
+                  <div class="carousel-inner" id="carouselInner">
+                    <!-- 動態生成的圖片會在這裡 -->
+                  </div>
+                  <button class="carousel-control-prev" type="button" data-bs-target="#productImageCarousel" data-bs-slide="prev" id="carouselPrev" style="display: none;">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                  </button>
+                  <button class="carousel-control-next" type="button" data-bs-target="#productImageCarousel" data-bs-slide="next" id="carouselNext" style="display: none;">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                  </button>
+                </div>
+                <!-- 圖片指示器 -->
+                <div class="carousel-indicators" id="carouselIndicators" style="position: relative; margin-top: 10px; display: none;">
+                  <!-- 動態生成的指示器會在這裡 -->
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="product-detail-info">
+                <h3 id="modalProductName" class="product-detail-title"></h3>
+                <p id="modalProductPrice" class="product-detail-price"></p>
+                <div class="product-detail-meta mb-3">
+                  <span id="modalProductCategory" class="badge bg-secondary me-2"></span>
+                  <span id="modalProductStyle" class="badge bg-outline-secondary"></span>
+                </div>
+                <div class="product-detail-description">
+                  <h6 class="mb-2">商品描述</h6>
+                  <p id="modalProductDescription" class="description-text"></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <footer>
     <div class="container text-center">
-      <p class="footer-text mb-0">&copy; 2024 Jewellery Choices. 版權所有.</p>
+      
     </div>
   </footer>
 
   <script>
-    const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTOI3lqBI9whPZYnWjAAb4GNJ-5bIzAZ2E1js8rbebzJkSIKf9ouiWF12QGWKdka3-4E1OfJPEuw-f3/pub?gid=0&single=true&output=csv';
+    // 檢測Banner圖片是否存在
+    function checkBannerImage() {
+      const pageHeader = document.querySelector('.page-header');
+      const img = new Image();
+      
+      img.onload = function() {
+        // 圖片存在，添加with-banner類
+        pageHeader.classList.add('with-banner');
+      };
+      
+      img.onerror = function() {
+        // 圖片不存在，保持原始渐变背景
+        console.log('Banner圖片不存在，使用默認背景');
+      };
+      
+      img.src = 'image/banner.png';
+    }
+    
+    // 頁面載入後檢測圖片
+    document.addEventListener('DOMContentLoaded', checkBannerImage);
+
+    const csvUrl = 'products_excel.csv'; // 改為本地CSV文件
     let allProducts = [];
 
-    function getGoogleDriveImageUrl(link) {
-      if (!link || !link.includes('drive.google.com')) {
-        return link || 'image/placeholder.svg'; 
+
+
+    // 自動根據商品名稱生成圖片路徑
+    function getImagePath(productName) {
+      // 優先檢查主圖片 PNG 格式
+      return `image/product_images/${productName}.png`;
+    }
+
+    // 處理圖片載入錯誤，按順序嘗試不同格式
+    function handleImageError(img, productName) {
+      const currentSrc = img.src;
+      
+      if (currentSrc.includes(`${productName}.png`)) {
+        // 主圖片PNG不存在，嘗試主圖片JPG
+        img.src = `image/product_images/${productName}.jpg`;
+      } else if (currentSrc.includes(`${productName}.jpg`)) {
+        // 主圖片JPG不存在，嘗試編號圖片PNG
+        img.src = `image/product_images/${productName}-1.png`;
+      } else if (currentSrc.includes(`${productName}-1.png`)) {
+        // 編號圖片PNG不存在，嘗試編號圖片JPG
+        img.src = `image/product_images/${productName}-1.jpg`;
+      } else {
+        // 所有格式都不存在，使用預設圖片
+        img.src = 'image/placeholder.svg';
+        img.onerror = null;
       }
-      const fileIdMatch = link.match(/file\/d\/([a-zA-Z0-9_-]+)/);
-      if (fileIdMatch && fileIdMatch[1]) {
-        return `https://drive.google.com/uc?id=${fileIdMatch[1]}`;
+    }
+
+    // 檢查圖片是否存在
+    function checkImageExists(url) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => resolve(true);
+        img.onerror = () => resolve(false);
+        img.src = url;
+      });
+    }
+
+    // 獲取商品的多張圖片路徑
+    async function getProductImages(productName) {
+      const images = [];
+      const extensions = ['png', 'jpg'];
+      let hasMainImage = false;
+      
+      // 先檢查主圖片（不帶數字後綴）
+      for (const ext of extensions) {
+        const mainImagePath = `image/product_images/${productName}.${ext}`;
+        if (await checkImageExists(mainImagePath)) {
+          images.push(mainImagePath);
+          hasMainImage = true;
+          break; // 找到主圖片就不再嘗試其他格式
+        }
       }
-      return link;
+      
+      // 然後檢查編號圖片（xxx-1, xxx-2, xxx-3 等）
+      for (let i = 1; i <= 5; i++) { // 最多檢查5張圖片
+        let foundImage = false;
+        for (const ext of extensions) {
+          const imagePath = `image/product_images/${productName}-${i}.${ext}`;
+          if (await checkImageExists(imagePath)) {
+            images.push(imagePath);
+            foundImage = true;
+            break; // 找到這個編號的圖片就不再嘗試其他格式
+          }
+        }
+        if (!foundImage) {
+          break; // 如果這個編號沒有圖片，就停止檢查更高的編號
+        }
+      }
+      
+      // 如果沒有主圖片，但有編號圖片，將第一張編號圖片移到最前面作為主圖片
+      if (!hasMainImage && images.length > 0) {
+        // 編號圖片已經按順序添加，第一張就是-1圖片，保持現狀即可
+      }
+      
+      // 如果沒有找到任何圖片，使用佔位符
+      if (images.length === 0) {
+        images.push('image/placeholder.svg');
+      }
+      
+      return images;
+    }
+
+    // 顯示商品詳情
+    async function showProductDetail(productId) {
+      const product = allProducts.find(p => p.id == productId);
+      if (!product) return;
+
+      // 獲取所有圖片
+      const images = await getProductImages(product.name);
+      
+      // 構建輪播內容
+      const carouselInner = document.getElementById('carouselInner');
+      const carouselIndicators = document.getElementById('carouselIndicators');
+      const carouselPrev = document.getElementById('carouselPrev');
+      const carouselNext = document.getElementById('carouselNext');
+      
+      // 清空現有內容
+      carouselInner.innerHTML = '';
+      carouselIndicators.innerHTML = '';
+      
+      // 創建輪播項目
+      images.forEach((imagePath, index) => {
+        // 創建輪播項目
+        const carouselItem = document.createElement('div');
+        carouselItem.className = `carousel-item ${index === 0 ? 'active' : ''}`;
+        carouselItem.innerHTML = `
+          <img src="${imagePath}" class="product-detail-image d-block w-100" alt="${product.name} - 圖片 ${index + 1}">
+        `;
+        carouselInner.appendChild(carouselItem);
+        
+        // 創建指示器（如果有多張圖片）
+        if (images.length > 1) {
+          const indicator = document.createElement('button');
+          indicator.type = 'button';
+          indicator.setAttribute('data-bs-target', '#productImageCarousel');
+          indicator.setAttribute('data-bs-slide-to', index.toString());
+          indicator.className = index === 0 ? 'active' : '';
+          indicator.setAttribute('aria-label', `Slide ${index + 1}`);
+          carouselIndicators.appendChild(indicator);
+        }
+      });
+      
+      // 根據圖片數量顯示/隱藏控制元素
+      if (images.length > 1) {
+        carouselPrev.style.display = 'block';
+        carouselNext.style.display = 'block';
+        carouselIndicators.style.display = 'block';
+      } else {
+        carouselPrev.style.display = 'none';
+        carouselNext.style.display = 'none';
+        carouselIndicators.style.display = 'none';
+      }
+      
+      // 填充其他商品信息
+      document.getElementById('modalProductName').textContent = product.name;
+      document.getElementById('modalProductPrice').textContent = `MOP ${product.price}`;
+      document.getElementById('modalProductCategory').textContent = product.category;
+      document.getElementById('modalProductStyle').textContent = product.style || '';
+      document.getElementById('modalProductDescription').textContent = product.description || '暫無詳細描述';
+
+      // 顯示模態框
+      const modal = new bootstrap.Modal(document.getElementById('productDetailModal'));
+      modal.show();
+      
+      // 如果有多張圖片，添加輪播事件監聽器來同步指示器
+      if (images.length > 1) {
+        const carousel = document.getElementById('productImageCarousel');
+        const indicators = carouselIndicators.querySelectorAll('button');
+        
+        // 定義輪播事件處理函數
+        const handleCarouselSlide = function (event) {
+          // 更新指示器狀態
+          indicators.forEach((indicator, index) => {
+            indicator.classList.remove('active');
+            if (index === event.to) {
+              indicator.classList.add('active');
+            }
+          });
+        };
+        
+        // 監聽輪播滑動事件
+        carousel.addEventListener('slide.bs.carousel', handleCarouselSlide);
+        
+        // 為每個指示器添加點擊事件
+        indicators.forEach((indicator, index) => {
+          const handleIndicatorClick = function() {
+            // 移除所有active類
+            indicators.forEach(ind => ind.classList.remove('active'));
+            // 為當前點擊的指示器添加active類
+            this.classList.add('active');
+          };
+          
+          indicator.addEventListener('click', handleIndicatorClick);
+          
+          // 存儲處理函數引用，方便後續清理
+          indicator._clickHandler = handleIndicatorClick;
+        });
+        
+        // 當模態框關閉時清理事件監聽器
+        document.getElementById('productDetailModal').addEventListener('hidden.bs.modal', function handleModalHidden() {
+          carousel.removeEventListener('slide.bs.carousel', handleCarouselSlide);
+          
+          indicators.forEach(indicator => {
+            if (indicator._clickHandler) {
+              indicator.removeEventListener('click', indicator._clickHandler);
+              delete indicator._clickHandler;
+            }
+          });
+          
+          // 移除本事件監聽器
+          this.removeEventListener('hidden.bs.modal', handleModalHidden);
+        }, { once: true });
+      }
     }
 
     function loadProducts() {
-      Papa.parse(sheetUrl, {
+      Papa.parse(csvUrl, {
         download: true,
         header: true,
         skipEmptyLines: true,
@@ -495,7 +913,7 @@
             .filter(p => p.id && p.name)
             .map(p => ({
               ...p,
-              image: getGoogleDriveImageUrl(p.image),
+              image: getImagePath(p.name), // 自動生成圖片路徑
               price: parseFloat(p.price) || 0,
             }));
           
@@ -504,13 +922,13 @@
           filterProducts(); 
         },
         error: function(err) {
-          console.error('從 Google Sheet 載入商品資料失敗:', err);
+          console.error('從本地CSV載入商品資料失敗:', err);
           const container = document.getElementById('product-container');
           container.innerHTML = `
             <div class="col-12">
               <div class="no-products">
                 <div class="no-products-icon"><i class="fas fa-exclamation-triangle"></i></div>
-                <h4 class="no-products-text">無法載入商品資料，請檢查資料來源或聯繫管理員。</h4>
+                <h4 class="no-products-text">無法載入商品資料，請檢查CSV文件是否存在。</h4>
               </div>
             </div>`;
         }
@@ -538,16 +956,19 @@
       list.forEach(p => {
         const col = document.createElement('div');
         col.className = 'col-md-6 col-lg-4 mb-4';
-        const descriptionHTML = p.description ? `<div class="product-desc mb-2" style="color:var(--text-dark);font-size:1rem;line-height:1.6;">${p.description}</div>` : '';
-
         col.innerHTML = `
-          <div class="product-card">
-            <img src="${p.image}" class="product-image" alt="${p.name}" onerror="this.onerror=null;this.src='image/placeholder.svg';">
+          <div class="product-card" onclick="showProductDetail(${p.id})">
+            <img src="${p.image}" class="product-image" alt="${p.name}" 
+                 onerror="handleImageError(this, '${p.name}')">
             <div class="product-body d-flex flex-column">
               <h5 class="product-title">${p.name}</h5>
               <p class="price">MOP ${p.price}</p>
               <span class="category-badge">${p.category}｜${p.style || ''}</span>
-              ${descriptionHTML}
+              <div class="mt-auto">
+                <button class="btn btn-view btn-sm" onclick="event.stopPropagation(); showProductDetail(${p.id})">
+                  <i class="fas fa-eye me-1"></i>查看詳情
+                </button>
+              </div>
             </div>
           </div>
         `;
