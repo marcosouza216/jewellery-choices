@@ -92,22 +92,7 @@
       margin-top: 20px;
     }
 
-    /* Banner圖片支持 - 當圖片存在時會覆蓋上面的背景 */
-    .page-header.with-banner {
-      background: linear-gradient(135deg, rgba(253,248,240,0.6) 0%, rgba(232,207,195,0.6) 100%), 
-                  url('image/banner.png') center/cover no-repeat;
-    }
 
-    .page-header.with-banner::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(135deg, rgba(253,248,240,0.15) 0%, rgba(232,207,195,0.2) 100%);
-      border-radius: 0 !important;
-    }
     .page-title {
       font-family: 'Cormorant Garamond', serif !important;
       font-weight: 400 !important;
@@ -863,30 +848,9 @@
     <div class="container text-center">
       
     </div>
-  </footer>
+    </footer>
 
   <script>
-    // 檢測Banner圖片是否存在
-    function checkBannerImage() {
-      const pageHeader = document.querySelector('.page-header');
-      const img = new Image();
-      
-      img.onload = function() {
-        // 圖片存在，添加with-banner類
-        pageHeader.classList.add('with-banner');
-      };
-      
-      img.onerror = function() {
-        // 圖片不存在，保持原始渐变背景
-        console.log('Banner圖片不存在，使用默認背景');
-      };
-      
-      img.src = 'image/banner.png';
-    }
-    
-    // 頁面載入後檢測圖片
-    document.addEventListener('DOMContentLoaded', checkBannerImage);
-
     const excelUrl = 'products.xlsx'; // 改為本地Excel文件
     let allProducts = [];
 
