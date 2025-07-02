@@ -108,7 +108,7 @@
       border-radius: 0 !important;
     }
     .page-title {
-      font-family: 'Dancing Script', cursive !important;
+      font-family: 'Cormorant Garamond', serif !important;
       font-weight: 400 !important;
       letter-spacing: 0.02em;
       font-style: normal;
@@ -333,7 +333,7 @@
     }
     @media (max-width: 768px) {
       .page-title {
-        font-size: 2.5rem;
+        font-size: 2rem;
       }
       
       .page-subtitle {
@@ -722,7 +722,7 @@
 
   <div class="page-header">
     <div class="container">
-      <h1 class="page-title">We make beautiful jewellery choices for you</h1>
+      <h1 class="page-title">We Make Beautiful Jewellery Choices For You</h1>
     </div>
   </div>
 
@@ -891,32 +891,20 @@
 
 
     // 自動根據商品名稱生成圖片路徑
-    async function getImagePath(productName) {
-      // 優先檢查商品名稱-1.jpg 作為主圖片
-      const imagePath1 = `image/product_images/${productName}-1.jpg`;
-      if (await checkImageExists(imagePath1)) {
-        return imagePath1;
+    function getImagePath(productName) {
+      // 優先順序：
+      // 1. 商品名稱-1.jpg (最佳主圖片)
+      // 2. 商品名稱-1.png
+      // 3. 商品名稱.jpg
+      // 4. 商品名稱.png
+      
+      // 先嘗試戒指-1.png（因為我們知道這個文件存在）
+      if (productName === '戒指') {
+        return 'image/product_images/戒指-1.png';
       }
       
-      // 如果沒有-1.jpg，檢查商品名稱.jpg
-      const imagePathMain = `image/product_images/${productName}.jpg`;
-      if (await checkImageExists(imagePathMain)) {
-        return imagePathMain;
-      }
-      
-      // 如果沒有.jpg，檢查PNG格式
-      const imagePath1Png = `image/product_images/${productName}-1.png`;
-      if (await checkImageExists(imagePath1Png)) {
-        return imagePath1Png;
-      }
-      
-      const imagePathMainPng = `image/product_images/${productName}.png`;
-      if (await checkImageExists(imagePathMainPng)) {
-        return imagePathMainPng;
-      }
-      
-      // 如果都沒有，返回預設圖片
-      return 'image/placeholder.svg';
+      // 其他商品按正常邏輯處理
+      return `image/product_images/${productName}-1.png`;
     }
 
     // 處理圖片載入錯誤，按順序嘗試不同格式
@@ -1130,34 +1118,24 @@
           // 獲取數據行
           const rows = jsonData.slice(1);
           
-          // 轉換為對象數組並處理圖片路徑
-          const processProducts = async () => {
-            const processedProducts = [];
-            for (const row of rows) {
-              if (row[0] && row[1]) { // 過濾掉空行
-                const product = {};
-                headers.forEach((header, index) => {
-                  product[header] = row[index] || '';
-                });
-                
-                // 異步獲取圖片路徑
-                const imagePath = await getImagePath(product.name);
-                
-                processedProducts.push({
-                  ...product,
-                  image: imagePath,
-                  price: parseFloat(product.price) || 0,
-                });
-              }
-            }
-            
-            allProducts = processedProducts;
-            renderProducts(allProducts);
-            updateProductCount(allProducts.length);
-            filterProducts();
-          };
+          // 轉換為對象數組
+          allProducts = rows
+            .filter(row => row[0] && row[1]) // 過濾掉空行
+            .map(row => {
+              const product = {};
+              headers.forEach((header, index) => {
+                product[header] = row[index] || '';
+              });
+              return {
+                ...product,
+                image: getImagePath(product.name), // 自動生成圖片路徑
+                price: parseFloat(product.price) || 0,
+              };
+            });
           
-          processProducts();
+          renderProducts(allProducts);
+          updateProductCount(allProducts.length);
+          filterProducts();
         })
         .catch(error => {
           console.error('從本地Excel載入商品資料失敗:', error);
