@@ -862,7 +862,14 @@
     </div>
     </footer>
 
+  <!-- Supabase JS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <script>
+    // Supabase 初始化
+    const supabaseUrl = 'https://xmnesekrzkkytcyhimrr.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhtbmVzZWtyemtreXRjeWhpbXJyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE5NzQ5OTIsImV4cCI6MjA2NzU1MDk5Mn0.FYH5PXFXpJmAicbEZKp4T0x4KPq3e-2Duncd951LffA';
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
     let allProducts = [];
 
     // 自動根據商品名稱生成圖片路徑
@@ -1075,34 +1082,27 @@
     }
 
     // 讀取商品資料
-    function loadProducts() {
-      fetch('products.json')
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('無法載入商品資料');
-          }
-          return response.json();
-        })
-        .then(data => {
-          allProducts = data.map(p => ({
-            ...p,
-            price: parseFloat(p.price) || 0
-          }));
-          renderProducts(allProducts);
-          updateProductCount(allProducts.length);
-          filterProducts();
-        })
-        .catch(error => {
-          console.error('載入商品資料失敗:', error);
-          const container = document.getElementById('product-container');
-          container.innerHTML = `
-            <div class="col-12">
-              <div class="no-products">
-                <div class="no-products-icon"><i class="fas fa-exclamation-triangle"></i></div>
-                <h4 class="no-products-text">無法載入商品資料，請檢查 products.json 是否存在。</h4>
-              </div>
-            </div>`;
-        });
+    async function loadProducts() {
+      const { data, error } = await supabase.from('products').select('*').order('id', { ascending: false });
+      if (error) {
+        console.error('載入商品資料失敗:', error);
+        const container = document.getElementById('product-container');
+        container.innerHTML = `
+          <div class="col-12">
+            <div class="no-products">
+              <div class="no-products-icon"><i class="fas fa-exclamation-triangle"></i></div>
+              <h4 class="no-products-text">無法載入商品資料，請檢查 Supabase 設定。</h4>
+            </div>
+          </div>`;
+        return;
+      }
+      allProducts = data.map(p => ({
+        ...p,
+        price: parseFloat(p.price) || 0
+      }));
+      renderProducts(allProducts);
+      updateProductCount(allProducts.length);
+      filterProducts();
     }
 
     function renderProducts(list) {

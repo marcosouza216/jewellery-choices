@@ -280,12 +280,8 @@
     </div>
   </div>
 
-  <!-- Firebase App (核心) -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <!-- Firebase Storage -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
-  <!-- Firebase Firestore -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <!-- Supabase JS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <script>
   let selectedFiles = [];
   let allProductsCache = [];
@@ -323,18 +319,29 @@
     renderPhotoPreview();
   };
 
+  // Supabase 初始化
+  const supabaseUrl = 'https://xmnesekrzkkytcyhimrr.supabase.co';
+  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhtbmVzZWtyemtreXRjeWhpbXJyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE5NzQ5OTIsImV4cCI6MjA2NzU1MDk5Mn0.FYH5PXFXpJmAicbEZKp4T0x4KPq3e-2Duncd951LffA';
+  const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+  const bucketName = 'product-images';
+
   // 表單送出
   const productForm = document.getElementById('productForm');
   productForm.addEventListener('submit', async function(e) {
     e.preventDefault();
     const formData = new FormData(productForm);
-    // 將所有已選圖片上傳到 Firebase Storage
+    // 上傳所有圖片到 Supabase Storage
     const urls = [];
     for (let file of selectedFiles) {
-      const storageRef = storage.ref('product_images/' + Date.now() + '-' + file.name);
-      await storageRef.put(file);
-      const url = await storageRef.getDownloadURL();
-      urls.push(url);
+      const filePath = `product_images/${Date.now()}-${file.name}`;
+      const { data, error } = await supabase.storage.from(bucketName).upload(filePath, file, { cacheControl: '3600', upsert: false });
+      if (error) {
+        document.getElementById('result').innerHTML = `<span class='text-danger'>圖片上傳失敗：${error.message}</span>`;
+        return;
+      }
+      // 取得公開網址
+      const { data: publicData } = supabase.storage.from(bucketName).getPublicUrl(filePath);
+      urls.push(publicData.publicUrl);
     }
     // 組合商品資料
     const product = {
@@ -344,10 +351,13 @@
       style: formData.get('style'),
       description: formData.get('description'),
       image: urls.join(','),
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
     };
-    // 寫入 Firestore
-    await db.collection('products').add(product);
+    // 寫入 Supabase Database
+    const { data: insertData, error: insertError } = await supabase.from('products').insert([product]);
+    if (insertError) {
+      document.getElementById('result').innerHTML = `<span class='text-danger'>商品資料寫入失敗：${insertError.message}</span>`;
+      return;
+    }
     document.getElementById('result').innerHTML = '<span class="text-success">商品已上傳到雲端！</span>';
     productForm.reset();
     selectedFiles = [];
@@ -481,19 +491,6 @@
       }
     });
   });
-
-  // Firebase 初始化
-  const firebaseConfig = {
-    apiKey: "AIzaSyBBuEcqy6GCoZoI5ytJmBHMFFBVxh-H9ZY",
-    authDomain: "jewellery-choices.firebaseapp.com",
-    projectId: "jewellery-choices",
-    storageBucket: "jewellery-choices.appspot.com",
-    messagingSenderId: "758733546960",
-    appId: "1:758733546960:web:5b72cc412953ea823b05d5"
-  };
-  firebase.initializeApp(firebaseConfig);
-  const storage = firebase.storage();
-  const db = firebase.firestore();
 
   // 初始載入
   loadProducts();
