@@ -863,10 +863,7 @@
     </footer>
 
   <script>
-    const excelUrl = 'products.xlsx'; // 改為本地Excel文件
     let allProducts = [];
-
-
 
     // 自動根據商品名稱生成圖片路徑
     function getImagePath(productName) {
@@ -969,9 +966,9 @@
       const product = allProducts.find(p => p.id == productId);
       if (!product) return;
 
-      // 獲取所有圖片
-      const images = await getProductImages(product.name);
-      
+      // 直接用 product.image 欄位（支援多圖）
+      const images = product.image ? product.image.split(',') : ['image/placeholder.svg'];
+
       // 構建輪播內容
       const carouselInner = document.getElementById('carouselInner');
       const carouselIndicators = document.getElementById('carouselIndicators');
@@ -1025,7 +1022,7 @@
       // 顯示模態框
       const modal = new bootstrap.Modal(document.getElementById('productDetailModal'));
       modal.show();
-      
+
       // 如果有多張圖片，添加輪播事件監聽器來同步指示器
       if (images.length > 1) {
         const carousel = document.getElementById('productImageCarousel');
@@ -1077,52 +1074,32 @@
       }
     }
 
+    // 讀取商品資料
     function loadProducts() {
-      fetch(excelUrl)
+      fetch('products.json')
         .then(response => {
           if (!response.ok) {
-            throw new Error('無法載入Excel文件');
+            throw new Error('無法載入商品資料');
           }
-          return response.arrayBuffer();
+          return response.json();
         })
         .then(data => {
-          const workbook = XLSX.read(data, { type: 'array' });
-          const sheetName = workbook.SheetNames[0]; // 讀取第一個工作表
-          const worksheet = workbook.Sheets[sheetName];
-          const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-          
-          // 獲取標題行
-          const headers = jsonData[0];
-          // 獲取數據行
-          const rows = jsonData.slice(1);
-          
-          // 轉換為對象數組
-          allProducts = rows
-            .filter(row => row[0] && row[1]) // 過濾掉空行
-            .map(row => {
-              const product = {};
-              headers.forEach((header, index) => {
-                product[header] = row[index] || '';
-              });
-              return {
-                ...product,
-                image: getImagePath(product.name), // 自動生成圖片路徑
-                price: parseFloat(product.price) || 0,
-              };
-            });
-          
+          allProducts = data.map(p => ({
+            ...p,
+            price: parseFloat(p.price) || 0
+          }));
           renderProducts(allProducts);
           updateProductCount(allProducts.length);
           filterProducts();
         })
         .catch(error => {
-          console.error('從本地Excel載入商品資料失敗:', error);
+          console.error('載入商品資料失敗:', error);
           const container = document.getElementById('product-container');
           container.innerHTML = `
             <div class="col-12">
               <div class="no-products">
                 <div class="no-products-icon"><i class="fas fa-exclamation-triangle"></i></div>
-                <h4 class="no-products-text">無法載入商品資料，請檢查Excel文件是否存在。</h4>
+                <h4 class="no-products-text">無法載入商品資料，請檢查 products.json 是否存在。</h4>
               </div>
             </div>`;
         });
@@ -1151,7 +1128,7 @@
         col.className = 'col-md-6 col-lg-4 mb-4';
         col.innerHTML = `
           <div class="product-card" onclick="showProductDetail(${p.id})">
-            <img src="${p.image}" class="product-image" alt="${p.name}" 
+            <img src="${p.image ? p.image.split(',')[0] : 'image/placeholder.svg'}" class="product-image" alt="${p.name}" 
                  onerror="handleImageError(this, '${p.name}')">
             <div class="product-body d-flex flex-column">
               <h5 class="product-title">${p.name}</h5>
@@ -1246,6 +1223,5 @@
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/nouislider@15.7.1/dist/nouislider.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </body>
 </html>
