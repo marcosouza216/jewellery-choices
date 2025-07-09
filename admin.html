@@ -273,6 +273,12 @@
               <label class="form-label">描述</label>
               <textarea class="form-control" id="editDescription"></textarea>
             </div>
+            <!-- 新增：商品圖片顯示與上傳，可刪除 -->
+            <div class="mb-2">
+              <label class="form-label">商品圖片</label>
+              <div id="editPhotoPreview" class="mb-2 d-flex flex-wrap"></div>
+              <input type="file" id="editPhotoInput" class="form-control" accept="image/*">
+            </div>
             <button type="submit" class="btn btn-primary w-100">儲存修改</button>
           </form>
         </div>
@@ -457,6 +463,11 @@
     document.getElementById('editCategory').value = data.category;
     document.getElementById('editStyle').value = data.style;
     document.getElementById('editDescription').value = data.description;
+    // 新增：記錄當前圖片列表
+    window.editPhotoUrls = data.image ? data.image.split(',') : [];
+    window.editSelectedFile = null;
+    renderEditPhotoPreview();
+    document.getElementById('editPhotoInput').value = '';
     // 強制刷新 Modal（避免多次初始化）
     const modalEl = document.getElementById('editProductModal');
     if (window.editProductModalInstance) {
@@ -466,6 +477,59 @@
     window.editProductModalInstance.show();
   };
 
+  // 新增：渲染圖片預覽並加刪除按鈕
+  function renderEditPhotoPreview() {
+    const preview = document.getElementById('editPhotoPreview');
+    preview.innerHTML = '';
+    if (window.editPhotoUrls && window.editPhotoUrls.length > 0) {
+      window.editPhotoUrls.forEach((url, idx) => {
+        const div = document.createElement('div');
+        div.className = 'me-2 mb-2 position-relative';
+        div.style.display = 'inline-block';
+        div.innerHTML = `
+          <img src="${url}" style="max-width:80px;max-height:80px;border:1px solid #ccc;border-radius:4px;">
+          <button type="button" class="photo-remove-btn" onclick="removeEditPhoto(${idx})">&times;</button>
+        `;
+        preview.appendChild(div);
+      });
+    }
+    // 新上傳的圖片預覽
+    if (window.editSelectedFile) {
+      const url = URL.createObjectURL(window.editSelectedFile);
+      const div = document.createElement('div');
+      div.className = 'me-2 mb-2 position-relative';
+      div.style.display = 'inline-block';
+      div.innerHTML = `
+        <img src="${url}" style="max-width:80px;max-height:80px;border:1px solid #ccc;border-radius:4px;">
+        <button type="button" class="photo-remove-btn" onclick="removeEditNewPhoto()">&times;</button>
+      `;
+      preview.appendChild(div);
+    }
+  }
+
+  // 新增：刪除圖片的函數
+  window.removeEditPhoto = function(idx) {
+    window.editPhotoUrls.splice(idx, 1);
+    renderEditPhotoPreview();
+  };
+  window.removeEditNewPhoto = function() {
+    window.editSelectedFile = null;
+    renderEditPhotoPreview();
+  };
+
+  // 監聽修改商品圖片 input
+  if (document.getElementById('editPhotoInput')) {
+    document.getElementById('editPhotoInput').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        window.editSelectedFile = file;
+      } else {
+        window.editSelectedFile = null;
+      }
+      renderEditPhotoPreview();
+    });
+  }
+
   document.getElementById('editProductForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     const id = document.getElementById('editId').value;
@@ -474,7 +538,24 @@
     const category = document.getElementById('editCategory').value;
     const style = document.getElementById('editStyle').value;
     const description = document.getElementById('editDescription').value;
-    const { error } = await supabase.from('products').update({ name, price, category, style, description }).eq('id', id);
+
+    let newImageUrls = window.editPhotoUrls ? [...window.editPhotoUrls] : [];
+    // 有新上傳圖片就上傳
+    if (window.editSelectedFile) {
+      const safeName = safeFileName(window.editSelectedFile.name);
+      const filePath = `product_images/${Date.now()}-${safeName}`;
+      const { error: uploadError } = await supabase.storage.from(bucketName).upload(filePath, window.editSelectedFile, { cacheControl: '3600', upsert: false });
+      if (uploadError) {
+        alert('圖片上傳失敗：' + uploadError.message);
+        return;
+      }
+      const { data: publicData } = supabase.storage.from(bucketName).getPublicUrl(filePath);
+      newImageUrls.push(publicData.publicUrl);
+    }
+
+    // 更新数据库
+    const updateData = { name, price, category, style, description, image: newImageUrls.join(',') };
+    const { error } = await supabase.from('products').update(updateData).eq('id', id);
     if (error) {
       alert('修改失敗：' + (error.message || '未知錯誤'));
     } else {

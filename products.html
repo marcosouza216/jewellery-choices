@@ -790,7 +790,7 @@
             <div id="price-slider" style="margin: 30px 10px 10px 10px;"></div>
             <div class="d-flex justify-content-between mt-2">
               <span id="priceMinLabel">MOP 0</span>
-              <span id="priceMaxLabel">MOP 10000</span>
+              <span id="priceMaxLabel">MOP 30000</span>
             </div>
           </div>
           </div>
@@ -1191,10 +1191,10 @@
       
       if (priceSlider) {
         noUiSlider.create(priceSlider, {
-          start: [0, 10000],
+          start: [0, 30000],
           connect: true,
           step: 1,
-          range: { 'min': 0, 'max': 10000 },
+          range: { 'min': 0, 'max': 30000 },
           format: {
             to: value => Math.round(value),
             from: value => Number(value)
