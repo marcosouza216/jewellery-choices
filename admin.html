@@ -327,9 +327,9 @@
   };
 
   // Supabase 初始化
-  const supabaseUrl = 'https://xmnesekrzkkytcyhimrr.supabase.co';
+  const supabaseUrl = 'https://xmnesekrzkkytcyhimrr.supabaseClient.co';
   const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhtbmVzZWtyemtreXRjeWhpbXJyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE5NzQ5OTIsImV4cCI6MjA2NzU1MDk5Mn0.FYH5PXFXpJmAicbEZKp4T0x4KPq3e-2Duncd951LffA';
-  const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+  const supabaseClient = supabaseClient.createClient(supabaseUrl, supabaseKey);
   const bucketName = 'product-images';
 
   // 安全檔名函數，避免中文與特殊字元，並保證不會全空
@@ -352,13 +352,13 @@
     for (let file of selectedFiles) {
       const safeName = safeFileName(file.name);
       const filePath = `product_images/${Date.now()}-${safeName}`;
-      const { data, error } = await supabase.storage.from(bucketName).upload(filePath, file, { cacheControl: '3600', upsert: false });
+      const { data, error } = await supabaseClient.storage.from(bucketName).upload(filePath, file, { cacheControl: '3600', upsert: false });
       if (error) {
         document.getElementById('result').innerHTML = `<span class='text-danger'>圖片上傳失敗：${error.message}</span>`;
         return;
       }
       // 取得公開網址
-      const { data: publicData } = supabase.storage.from(bucketName).getPublicUrl(filePath);
+      const { data: publicData } = supabaseClient.storage.from(bucketName).getPublicUrl(filePath);
       urls.push(publicData.publicUrl);
     }
     // 組合商品資料
@@ -372,7 +372,7 @@
     };
     console.log('送出 product:', product);
     // 寫入 Supabase Database
-    const { data: insertData, error: insertError } = await supabase.from('products').insert([product]);
+    const { data: insertData, error: insertError } = await supabaseClient.from('products').insert([product]);
     if (insertError) {
       document.getElementById('result').innerHTML = `<span class='text-danger'>商品資料寫入失敗：${insertError.message}</span>`;
       return;
@@ -445,7 +445,7 @@
   // 刪除商品（Supabase 版）
   window.deleteProduct = async function(id) {
     if (!confirm('確定要刪除此商品嗎？')) return;
-    const { error } = await supabase.from('products').delete().eq('id', id);
+    const { error } = await supabaseClient.from('products').delete().eq('id', id);
     if (error) {
       alert('刪除失敗：' + (error.message || '未知錯誤'));
     } else {
@@ -455,7 +455,7 @@
 
   // 修改商品（Supabase 版）
   window.editProduct = async function(id) {
-    const { data, error } = await supabase.from('products').select('*').eq('id', id).single();
+    const { data, error } = await supabaseClient.from('products').select('*').eq('id', id).single();
     if (error || !data) return;
     document.getElementById('editId').value = data.id;
     document.getElementById('editName').value = data.name;
@@ -546,19 +546,19 @@
       for (let file of window.editSelectedFiles) {
         const safeName = safeFileName(file.name);
         const filePath = `product_images/${Date.now()}-${safeName}`;
-        const { error: uploadError } = await supabase.storage.from(bucketName).upload(filePath, file, { cacheControl: '3600', upsert: false });
+        const { error: uploadError } = await supabaseClient.storage.from(bucketName).upload(filePath, file, { cacheControl: '3600', upsert: false });
         if (uploadError) {
           alert('圖片上傳失敗：' + uploadError.message);
           return;
         }
-        const { data: publicData } = supabase.storage.from(bucketName).getPublicUrl(filePath);
+        const { data: publicData } = supabaseClient.storage.from(bucketName).getPublicUrl(filePath);
         newImageUrls.push(publicData.publicUrl);
       }
     }
 
     // 更新数据库
     const updateData = { name, price, category, style, description, image: newImageUrls.join(',') };
-    const { error } = await supabase.from('products').update(updateData).eq('id', id);
+    const { error } = await supabaseClient.from('products').update(updateData).eq('id', id);
     if (error) {
       alert('修改失敗：' + (error.message || '未知錯誤'));
     } else {
@@ -569,7 +569,7 @@
 
   // 讀取 Supabase 商品資料
   async function loadProductsFromSupabase() {
-    const { data, error } = await supabase.from('products').select('*').order('id', { ascending: false });
+    const { data, error } = await supabaseClient.from('products').select('*').order('id', { ascending: false });
     if (error) {
       document.getElementById('productList').innerHTML = '<div class="text-danger">無法載入商品資料</div>';
       document.getElementById('productCards').innerHTML = '';

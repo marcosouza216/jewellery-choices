@@ -877,7 +877,7 @@
     // Supabase 初始化
     const supabaseUrl = 'https://xmnesekrzkkytcyhimrr.supabase.co';
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhtbmVzZWtyemtreXRjeWhpbXJyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE5NzQ5OTIsImV4cCI6MjA2NzU1MDk5Mn0.FYH5PXFXpJmAicbEZKp4T0x4KPq3e-2Duncd951LffA';
-    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+    const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
     // 自動根據商品名稱生成圖片路徑
     function getImagePath(productName) {
@@ -1090,7 +1090,7 @@
 
     // 讀取 Supabase 商品資料
     async function loadProducts() {
-      const { data, error } = await supabase.from('products').select('*').order('id', { ascending: false });
+      const { data, error } = await supabaseClient.from('products').select('*').order('id', { ascending: false });
       if (error) {
         const container = document.getElementById('product-container');
         container.innerHTML = `

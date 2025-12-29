@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>手機測試頁面</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+      background: #f5f5f5;
+    }
+    .device-card {
+      background: white;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .device-card h2 {
+      margin-top: 0;
+      color: #A06D5A;
+    }
+    .device-card a {
+      display: inline-block;
+      padding: 10px 20px;
+      background: #A06D5A;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      margin: 5px;
+    }
+    .device-card a:hover {
+      background: #8C5B4A;
+    }
+    .info {
+      background: #e8f4f8;
+      padding: 15px;
+      border-radius: 5px;
+      margin: 20px 0;
+      border-left: 4px solid #A06D5A;
+    }
+    .ip-address {
+      font-family: monospace;
+      background: #f0f0f0;
+      padding: 5px 10px;
+      border-radius: 3px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>📱 手機端測試</h1>
+  
+  <div class="info">
+    <h3>💡 測試方法</h3>
+    <p><strong>方法 1：瀏覽器開發者工具</strong></p>
+    <ul>
+      <li>按 <code>Cmd+Option+I</code> (Mac) 或 <code>F12</code> (Windows) 打開開發者工具</li>
+      <li>按 <code>Cmd+Shift+M</code> (Mac) 或 <code>Ctrl+Shift+M</code> (Windows) 進入響應式設計模式</li>
+      <li>選擇不同設備尺寸測試</li>
+    </ul>
+    
+    <p><strong>方法 2：在手機上測試</strong></p>
+    <ul>
+      <li>確保手機和電腦連接同一個 Wi-Fi</li>
+      <li>在手機瀏覽器訪問：<span class="ip-address">http://25.34.179.108:8000</span></li>
+      <li>或掃描下方二維碼（如果可用）</li>
+    </ul>
+  </div>
+
+  <div class="device-card">
+    <h2>📄 頁面列表</h2>
+    <a href="index.html" target="_blank">首頁 (index.html)</a>
+    <a href="products.html" target="_blank">商品頁 (products.html)</a>
+    <a href="admin.html" target="_blank">後台管理 (admin.html)</a>
+    <a href="contact.html" target="_blank">聯繫方式 (contact.html)</a>
+  </div>
+
+  <div class="device-card">
+    <h2>📱 常用手機尺寸</h2>
+    <p><strong>iPhone 14 Pro Max:</strong> 430 × 932</p>
+    <p><strong>iPhone 14 Pro:</strong> 393 × 852</p>
+    <p><strong>iPhone SE:</strong> 375 × 667</p>
+    <p><strong>Samsung Galaxy S21:</strong> 360 × 800</p>
+    <p><strong>iPad:</strong> 768 × 1024</p>
+  </div>
+
+  <div class="device-card">
+    <h2>🔗 快速連結</h2>
+    <p>本地服務器地址：</p>
+    <p class="ip-address">http://localhost:8000</p>
+    <p>手機訪問地址：</p>
+    <p class="ip-address">http://25.34.179.108:8000</p>
+  </div>
+
+  <div class="info">
+    <h3>⚠️ 注意事項</h3>
+    <ul>
+      <li>如果手機無法訪問，檢查防火牆設置</li>
+      <li>確保手機和電腦在同一個 Wi-Fi 網絡</li>
+      <li>如果 IP 地址變化，需要更新手機上的網址</li>
+      <li>關閉本地服務器：在終端按 <code>Ctrl+C</code></li>
+    </ul>
+  </div>
+</body>
+</html>
