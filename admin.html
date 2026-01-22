@@ -327,9 +327,9 @@
   };
 
   // Supabase 初始化
-  const supabaseUrl = 'https://xmnesekrzkkytcyhimrr.supabaseClient.co';
+  const supabaseUrl = 'https://xmnesekrzkkytcyhimrr.supabase.co';
   const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhtbmVzZWtyemtreXRjeWhpbXJyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE5NzQ5OTIsImV4cCI6MjA2NzU1MDk5Mn0.FYH5PXFXpJmAicbEZKp4T0x4KPq3e-2Duncd951LffA';
-  const supabaseClient = supabaseClient.createClient(supabaseUrl, supabaseKey);
+  const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
   const bucketName = 'product-images';
 
   // 安全檔名函數，避免中文與特殊字元，並保證不會全空
@@ -455,26 +455,43 @@
 
   // 修改商品（Supabase 版）
   window.editProduct = async function(id) {
-    const { data, error } = await supabaseClient.from('products').select('*').eq('id', id).single();
-    if (error || !data) return;
-    document.getElementById('editId').value = data.id;
-    document.getElementById('editName').value = data.name;
-    document.getElementById('editPrice').value = data.price;
-    document.getElementById('editCategory').value = data.category;
-    document.getElementById('editStyle').value = data.style;
-    document.getElementById('editDescription').value = data.description;
-    // 新增：記錄當前圖片列表
-    window.editPhotoUrls = data.image ? data.image.split(',') : [];
-    window.editSelectedFiles = [];
-    renderEditPhotoPreview();
-    document.getElementById('editPhotoInput').value = '';
-    // 強制刷新 Modal（避免多次初始化）
-    const modalEl = document.getElementById('editProductModal');
-    if (window.editProductModalInstance) {
-      window.editProductModalInstance.hide();
+    try {
+      const { data, error } = await supabaseClient.from('products').select('*').eq('id', id).single();
+      if (error) {
+        console.error('讀取商品資料失敗:', error);
+        alert('讀取商品資料失敗：' + error.message);
+        return;
+      }
+      if (!data) {
+        alert('找不到該商品');
+        return;
+      }
+      
+      // 填充表單
+      document.getElementById('editId').value = data.id;
+      document.getElementById('editName').value = data.name || '';
+      document.getElementById('editPrice').value = data.price || '';
+      document.getElementById('editCategory').value = data.category || '';
+      document.getElementById('editStyle').value = data.style || '';
+      document.getElementById('editDescription').value = data.description || '';
+      
+      // 記錄當前圖片列表
+      window.editPhotoUrls = data.image ? data.image.split(',') : [];
+      window.editSelectedFiles = [];
+      renderEditPhotoPreview();
+      document.getElementById('editPhotoInput').value = '';
+      
+      // 強制刷新 Modal（避免多次初始化）
+      const modalEl = document.getElementById('editProductModal');
+      if (window.editProductModalInstance) {
+        window.editProductModalInstance.hide();
+      }
+      window.editProductModalInstance = new bootstrap.Modal(modalEl);
+      window.editProductModalInstance.show();
+    } catch (err) {
+      console.error('修改商品時發生錯誤:', err);
+      alert('發生錯誤：' + err.message);
     }
-    window.editProductModalInstance = new bootstrap.Modal(modalEl);
-    window.editProductModalInstance.show();
   };
 
   // 新增：渲染圖片預覽並加刪除按鈕
@@ -520,52 +537,78 @@
   };
 
   // 監聽修改商品圖片 input
-  if (document.getElementById('editPhotoInput')) {
-    document.getElementById('editPhotoInput').addEventListener('change', function(e) {
-      const files = Array.from(e.target.files);
-      files.forEach(file => {
-        window.editSelectedFiles.push(file);
+  function setupEditFormListeners() {
+    const editPhotoInput = document.getElementById('editPhotoInput');
+    if (editPhotoInput) {
+      editPhotoInput.addEventListener('change', function(e) {
+        const files = Array.from(e.target.files);
+        files.forEach(file => {
+          if (!window.editSelectedFiles) {
+            window.editSelectedFiles = [];
+          }
+          window.editSelectedFiles.push(file);
+        });
+        renderEditPhotoPreview();
+        e.target.value = '';
       });
-      renderEditPhotoPreview();
-      e.target.value = '';
-    });
-  }
+    }
 
-  document.getElementById('editProductForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    const id = document.getElementById('editId').value;
-    const name = document.getElementById('editName').value;
-    const price = document.getElementById('editPrice').value;
-    const category = document.getElementById('editCategory').value;
-    const style = document.getElementById('editStyle').value;
-    const description = document.getElementById('editDescription').value;
+    const editProductForm = document.getElementById('editProductForm');
+    if (editProductForm) {
+      editProductForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        try {
+          const id = document.getElementById('editId').value;
+          const name = document.getElementById('editName').value;
+          const price = document.getElementById('editPrice').value;
+          const category = document.getElementById('editCategory').value;
+          const style = document.getElementById('editStyle').value;
+          const description = document.getElementById('editDescription').value;
 
-    let newImageUrls = window.editPhotoUrls ? [...window.editPhotoUrls] : [];
-    // 有新上傳圖片就上傳
-    if (window.editSelectedFiles && window.editSelectedFiles.length > 0) {
-      for (let file of window.editSelectedFiles) {
-        const safeName = safeFileName(file.name);
-        const filePath = `product_images/${Date.now()}-${safeName}`;
-        const { error: uploadError } = await supabaseClient.storage.from(bucketName).upload(filePath, file, { cacheControl: '3600', upsert: false });
-        if (uploadError) {
-          alert('圖片上傳失敗：' + uploadError.message);
-          return;
+          if (!id) {
+            alert('商品 ID 不存在，無法修改');
+            return;
+          }
+
+          let newImageUrls = window.editPhotoUrls ? [...window.editPhotoUrls] : [];
+          // 有新上傳圖片就上傳
+          if (window.editSelectedFiles && window.editSelectedFiles.length > 0) {
+            for (let file of window.editSelectedFiles) {
+              const safeName = safeFileName(file.name);
+              const filePath = `product_images/${Date.now()}-${safeName}`;
+              const { error: uploadError } = await supabaseClient.storage.from(bucketName).upload(filePath, file, { cacheControl: '3600', upsert: false });
+              if (uploadError) {
+                console.error('圖片上傳失敗:', uploadError);
+                alert('圖片上傳失敗：' + uploadError.message);
+                return;
+              }
+              const { data: publicData } = supabaseClient.storage.from(bucketName).getPublicUrl(filePath);
+              newImageUrls.push(publicData.publicUrl);
+            }
+          }
+
+          // 更新数据库
+          const updateData = { name, price, category, style, description, image: newImageUrls.join(',') };
+          console.log('更新商品資料:', updateData);
+          const { error } = await supabaseClient.from('products').update(updateData).eq('id', id);
+          if (error) {
+            console.error('更新失敗:', error);
+            alert('修改失敗：' + (error.message || '未知錯誤'));
+          } else {
+            alert('商品修改成功！');
+            loadProductsFromSupabase();
+            const modalInstance = bootstrap.Modal.getInstance(document.getElementById('editProductModal'));
+            if (modalInstance) {
+              modalInstance.hide();
+            }
+          }
+        } catch (err) {
+          console.error('提交表單時發生錯誤:', err);
+          alert('發生錯誤：' + err.message);
         }
-        const { data: publicData } = supabaseClient.storage.from(bucketName).getPublicUrl(filePath);
-        newImageUrls.push(publicData.publicUrl);
-      }
+      });
     }
-
-    // 更新数据库
-    const updateData = { name, price, category, style, description, image: newImageUrls.join(',') };
-    const { error } = await supabaseClient.from('products').update(updateData).eq('id', id);
-    if (error) {
-      alert('修改失敗：' + (error.message || '未知錯誤'));
-    } else {
-      loadProductsFromSupabase();
-      bootstrap.Modal.getInstance(document.getElementById('editProductModal')).hide();
-    }
-  });
+  }
 
   // 讀取 Supabase 商品資料
   async function loadProductsFromSupabase() {
@@ -579,8 +622,11 @@
     renderProductList(data);
   }
 
-  // 頁面載入時自動載入商品
-  window.addEventListener('DOMContentLoaded', loadProductsFromSupabase);
+  // 頁面載入時自動載入商品和設置事件監聽器
+  window.addEventListener('DOMContentLoaded', function() {
+    loadProductsFromSupabase();
+    setupEditFormListeners();
+  });
   </script>
 </body>
 </html> 
