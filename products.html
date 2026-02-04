@@ -999,7 +999,7 @@
         const carouselItem = document.createElement('div');
         carouselItem.className = `carousel-item ${index === 0 ? 'active' : ''}`;
         carouselItem.innerHTML = `
-          <img src="${imagePath}" class="product-detail-image d-block w-100" alt="${product.name} - 圖片 ${index + 1}">
+          <img src="${imagePath}" class="product-detail-image d-block w-100" alt="${product.name} - 圖片 ${index + 1}" loading="lazy">
         `;
         carouselInner.appendChild(carouselItem);
         
@@ -1135,7 +1135,7 @@
         col.innerHTML = `
           <div class="product-card" onclick="showProductDetail(${p.id})">
             <img src="${p.image ? p.image.split(',')[0] : 'image/placeholder.svg'}" class="product-image" alt="${p.name}" 
-                 onerror="handleImageError(this, '${p.name}')">
+                 loading="lazy" onerror="handleImageError(this, '${p.name}')">
             <div class="product-body d-flex flex-column">
               <h5 class="product-title">${p.name}</h5>
               <p class="price">MOP ${p.price}</p>

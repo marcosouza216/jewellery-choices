@@ -398,7 +398,7 @@
         <td>${p.category}</td>
         <td>${p.style}</td>
         <td>${p.description ? (p.description.length > 10 ? p.description.slice(0, 10) + '…' : p.description) : ''}</td>
-        <td>${p.image ? p.image.split(',').map(img => `<img src='${img}' style='max-width:60px;max-height:60px;margin:2px;'>`).join('') : ''}</td>
+        <td>${p.image ? p.image.split(',').map(img => `<img src='${img}' loading='lazy' style='max-width:60px;max-height:60px;margin:2px;'>`).join('') : ''}</td>
         <td>
           <button class='btn btn-sm btn-outline-primary me-1' onclick='editProduct(${p.id})'>修改</button>
           <button class='btn btn-sm btn-outline-danger' onclick='deleteProduct(${p.id})'>刪除</button>
@@ -417,7 +417,7 @@
         <div><span class='product-card-label'>類別</span>${p.category}</div>
         <div><span class='product-card-label'>款式</span>${p.style}</div>
         <div><span class='product-card-label'>描述</span>${p.description ? (p.description.length > 10 ? p.description.slice(0, 10) + '…' : p.description) : ''}</div>
-        <div><span class='product-card-label'>圖片</span>${p.image ? p.image.split(',').map(img => `<img src='${img}'>`).join('') : ''}</div>
+        <div><span class='product-card-label'>圖片</span>${p.image ? p.image.split(',').map(img => `<img src='${img}' loading='lazy'>`).join('') : ''}</div>
         <div class='card-actions'>
           <button class='btn btn-sm btn-outline-primary' onclick='editProduct(${p.id})'>修改</button>
           <button class='btn btn-sm btn-outline-danger' onclick='deleteProduct(${p.id})'>刪除</button>
@@ -504,7 +504,7 @@
         div.className = 'me-2 mb-2 position-relative';
         div.style.display = 'inline-block';
         div.innerHTML = `
-          <img src="${url}" style="max-width:80px;max-height:80px;border:1px solid #ccc;border-radius:4px;">
+          <img src="${url}" loading="lazy" style="max-width:80px;max-height:80px;border:1px solid #ccc;border-radius:4px;">
           <button type="button" class="photo-remove-btn" onclick="removeEditPhoto(${idx})">&times;</button>
         `;
         preview.appendChild(div);
