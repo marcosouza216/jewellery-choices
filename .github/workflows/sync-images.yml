@@ -3,6 +3,9 @@ name: Sync Images From Supabase
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   sync:
     runs-on: ubuntu-latest
@@ -14,8 +17,32 @@ jobs:
         run: |
           test -n "${{ secrets.SUPABASE_URL }}"
           test -n "${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}"
-          test -n "${{ secrets.SYNC_TRIGGER_SECRET }}"
-          echo "Secrets are configured."
+          echo "Supabase secrets are configured."
 
-      - name: Done
-        run: echo "Workflow dispatch works."
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Sync images and rewrite DB URLs
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SUPABASE_BUCKET: product-images
+          IMAGES_DIR: image
+          PAGES_BASE_URL: ${{ secrets.PAGES_BASE_URL }}
+          GITHUB_REPOSITORY: ${{ github.event.repository.name }}
+          GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
+        run: python scripts/sync_supabase_images_to_github.py
+
+      - name: Commit and push synced images
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add image
+            git commit -m "chore: sync product images from supabase"
+            git push
+          else
+            echo "No new images to commit."
+          fi
