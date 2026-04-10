@@ -33,6 +33,8 @@ jobs:
           python - <<'PY'
           import json
           import os
+          import urllib.error
+          import urllib.parse
           import urllib.request
           
           base = os.environ["SUPABASE_URL"].rstrip("/")
@@ -68,8 +70,27 @@ jobs:
               method="PATCH",
               headers=headers,
           )
-          with urllib.request.urlopen(patch_req, timeout=30) as resp:
-              _ = resp.read()
+          try:
+              with urllib.request.urlopen(patch_req, timeout=30) as resp:
+                  _ = resp.read()
+          except urllib.error.HTTPError as e:
+              if e.code in (301, 302, 307, 308):
+                  redirected = e.headers.get("Location")
+                  if redirected:
+                      redirected = urllib.parse.urljoin(f"{base}/rest/v1/products?id=eq.{pid}", redirected)
+                      print(f"PATCH precheck redirect -> {redirected}")
+                      redirected_req = urllib.request.Request(
+                          redirected,
+                          data=json.dumps({"image": image_value}, ensure_ascii=False).encode("utf-8"),
+                          method="PATCH",
+                          headers=headers,
+                      )
+                      with urllib.request.urlopen(redirected_req, timeout=30) as resp:
+                          _ = resp.read()
+                  else:
+                      raise
+              else:
+                  raise
           
           print(f"PATCH precheck passed on product id={pid}")
           PY
