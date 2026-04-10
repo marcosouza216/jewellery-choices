@@ -28,7 +28,7 @@ def require_env():
     if not SUPABASE_SERVICE_ROLE_KEY:
         missing.append("SUPABASE_SERVICE_ROLE_KEY")
     if missing:
-        print(f"Missing required env: {', '.join(missing)}")
+        print(f"Missing required env: {', '.join(missing)}", flush=True)
         sys.exit(1)
 
 
@@ -37,7 +37,7 @@ def get_pages_base_url() -> str:
         return PAGES_BASE_URL.rstrip("/")
     if GITHUB_REPOSITORY and GITHUB_REPOSITORY_OWNER:
         return f"https://{GITHUB_REPOSITORY_OWNER}.github.io/{GITHUB_REPOSITORY}".rstrip("/")
-    print("Cannot determine pages base URL. Set PAGES_BASE_URL.")
+    print("Cannot determine pages base URL. Set PAGES_BASE_URL.", flush=True)
     sys.exit(1)
 
 
@@ -93,10 +93,10 @@ def download_if_needed(source_url: str, local_path: pathlib.Path):
         with urllib.request.urlopen(req, timeout=120) as resp:
             local_path.write_bytes(resp.read())
     except urllib.error.HTTPError as e:
-        print(f"WARN download failed [{e.code}] {source_url}")
+        print(f"WARN download failed [{e.code}] {source_url}", flush=True)
         return False
     except Exception as e:
-        print(f"WARN download failed {source_url} ({e})")
+        print(f"WARN download failed {source_url} ({e})", flush=True)
         return False
     return True
 
@@ -104,10 +104,10 @@ def download_if_needed(source_url: str, local_path: pathlib.Path):
 def main():
     require_env()
     pages_base = get_pages_base_url()
-    print(f"Pages base URL: {pages_base}")
+    print(f"Pages base URL: {pages_base}", flush=True)
 
     products = supabase_get("/rest/v1/products?select=id,image")
-    print(f"Loaded {len(products)} products")
+    print(f"Loaded {len(products)} products", flush=True)
 
     unique_urls = {}
     for p in products:
@@ -120,11 +120,12 @@ def main():
                 unique_urls[u] = True
 
     old_urls = list(unique_urls.keys())
-    print(f"Found {len(old_urls)} unique image URLs")
+    print(f"Found {len(old_urls)} unique image URLs", flush=True)
 
     old_to_new = {}
     downloaded_count = 0
-    for old_url in old_urls:
+    total_urls = len(old_urls)
+    for i, old_url in enumerate(old_urls, start=1):
         object_path = extract_object_path(old_url)
         if not object_path:
             continue
@@ -133,11 +134,17 @@ def main():
         if download_if_needed(old_url, local_path):
             downloaded_count += 1
         old_to_new[old_url] = f"{pages_base}/{rel_path.as_posix()}"
+        if i % 20 == 0 or i == total_urls:
+            print(
+                f"Image sync progress: {i}/{total_urls}, downloaded new: {downloaded_count}",
+                flush=True,
+            )
 
-    print(f"Downloaded {downloaded_count} new images")
+    print(f"Downloaded {downloaded_count} new images", flush=True)
 
     updated_rows = 0
-    for p in products:
+    total_products = len(products)
+    for i, p in enumerate(products, start=1):
         image_csv = (p.get("image") or "").strip()
         if not image_csv:
             continue
@@ -149,9 +156,14 @@ def main():
         pid = p.get("id")
         supabase_patch(f"/rest/v1/products?id=eq.{pid}", {"image": new_csv})
         updated_rows += 1
+        if updated_rows % 20 == 0 or i == total_products:
+            print(
+                f"DB rewrite progress: checked {i}/{total_products}, updated {updated_rows}",
+                flush=True,
+            )
 
-    print(f"Updated image URL in {updated_rows} products")
-    print("Sync done")
+    print(f"Updated image URL in {updated_rows} products", flush=True)
+    print("Sync done", flush=True)
 
 
 if __name__ == "__main__":

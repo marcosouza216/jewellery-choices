@@ -9,6 +9,7 @@ permissions:
 jobs:
   sync:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -33,7 +34,8 @@ jobs:
           PAGES_BASE_URL: ${{ secrets.PAGES_BASE_URL }}
           GITHUB_REPOSITORY: ${{ github.event.repository.name }}
           GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
-        run: python scripts/sync_supabase_images_to_github.py
+          PYTHONUNBUFFERED: "1"
+        run: python -u scripts/sync_supabase_images_to_github.py
 
       - name: Commit and push synced images
         run: |
