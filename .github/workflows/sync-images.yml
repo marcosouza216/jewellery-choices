@@ -25,6 +25,55 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Precheck Supabase PATCH connectivity
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import urllib.request
+          
+          base = os.environ["SUPABASE_URL"].rstrip("/")
+          key = os.environ["SUPABASE_SERVICE_ROLE_KEY"]
+          headers = {
+              "apikey": key,
+              "Authorization": f"Bearer {key}",
+              "Accept": "application/json",
+              "Content-Type": "application/json",
+              "Prefer": "return=representation",
+          }
+          
+          # Read one product row
+          get_req = urllib.request.Request(
+              f"{base}/rest/v1/products?select=id,image&order=id.asc&limit=1",
+              headers=headers,
+          )
+          with urllib.request.urlopen(get_req, timeout=30) as resp:
+              rows = json.loads(resp.read().decode("utf-8"))
+          
+          if not rows:
+              print("No products found. Skip PATCH precheck.")
+              raise SystemExit(0)
+          
+          row = rows[0]
+          pid = row["id"]
+          image_value = row.get("image", "")
+          
+          # Do a no-op PATCH (write same value back)
+          patch_req = urllib.request.Request(
+              f"{base}/rest/v1/products?id=eq.{pid}",
+              data=json.dumps({"image": image_value}, ensure_ascii=False).encode("utf-8"),
+              method="PATCH",
+              headers=headers,
+          )
+          with urllib.request.urlopen(patch_req, timeout=30) as resp:
+              _ = resp.read()
+          
+          print(f"PATCH precheck passed on product id={pid}")
+          PY
+
       - name: Sync images and rewrite DB URLs
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}

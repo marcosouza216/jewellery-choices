@@ -73,6 +73,8 @@ def supabase_patch(path: str, payload: dict):
         if e.code in (301, 302, 307, 308):
             redirected_url = e.headers.get("Location")
             if redirected_url:
+                redirected_url = urllib.parse.urljoin(url, redirected_url)
+                print(f"PATCH redirect: {url} -> {redirected_url}", flush=True)
                 redirected_req = urllib.request.Request(
                     redirected_url,
                     data=data,
@@ -81,6 +83,7 @@ def supabase_patch(path: str, payload: dict):
                 )
                 with urllib.request.urlopen(redirected_req, timeout=60):
                     return
+        print(f"PATCH failed: {url} [{e.code}] {e.reason}", flush=True)
         raise
 
 
@@ -165,7 +168,7 @@ def main():
         if new_csv == image_csv:
             continue
         pid = p.get("id")
-        supabase_patch(f"/rest/v1/products/?id=eq.{pid}", {"image": new_csv})
+        supabase_patch(f"/rest/v1/products?id=eq.{pid}", {"image": new_csv})
         updated_rows += 1
         if updated_rows % 20 == 0 or i == total_products:
             print(
