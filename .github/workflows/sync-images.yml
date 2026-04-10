@@ -1,0 +1,21 @@
+name: Sync Images From Supabase
+
+on:
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify secrets exist
+        run: |
+          test -n "${{ secrets.SUPABASE_URL }}"
+          test -n "${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}"
+          test -n "${{ secrets.SYNC_TRIGGER_SECRET }}"
+          echo "Secrets are configured."
+
+      - name: Done
+        run: echo "Workflow dispatch works."
