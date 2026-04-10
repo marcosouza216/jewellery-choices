@@ -331,6 +331,8 @@
   const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhtbmVzZWtyemtreXRjeWhpbXJyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE5NzQ5OTIsImV4cCI6MjA2NzU1MDk5Mn0.FYH5PXFXpJmAicbEZKp4T0x4KPq3e-2Duncd951LffA';
   const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
   const bucketName = 'product-images';
+  const syncTriggerUrl = 'https://xmnesekrzkkytcyhimrr.supabase.co/functions/v1/trigger-sync';
+  const syncTriggerSecret = 'fb9u23fbc';
 
   // 安全檔名函數，避免中文與特殊字元，並保證不會全空
   function safeFileName(name) {
@@ -340,6 +342,28 @@
     let base = name.slice(0, name.lastIndexOf('.')).replace(/[^a-zA-Z0-9_-]/g, '');
     if (!base) base = 'file_' + Date.now();
     return base + ext;
+  }
+
+  async function triggerGithubImageSync() {
+    try {
+      const resp = await fetch(syncTriggerUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${supabaseKey}`,
+          'apikey': supabaseKey,
+          'x-sync-secret': syncTriggerSecret
+        }
+      });
+      if (!resp.ok) {
+        const text = await resp.text();
+        console.warn('同步触发失败:', resp.status, text);
+        return false;
+      }
+      return true;
+    } catch (err) {
+      console.warn('同步触发异常:', err);
+      return false;
+    }
   }
 
   // 表單送出
@@ -377,7 +401,10 @@
       document.getElementById('result').innerHTML = `<span class='text-danger'>商品資料寫入失敗：${insertError.message}</span>`;
       return;
     }
-    document.getElementById('result').innerHTML = '<span class="text-success">商品已上傳到雲端！</span>';
+    const syncTriggered = await triggerGithubImageSync();
+    document.getElementById('result').innerHTML = syncTriggered
+      ? '<span class="text-success">商品已上傳到雲端，已自動觸發圖片同步！</span>'
+      : '<span class="text-success">商品已上傳到雲端！</span><br><span class="text-warning">圖片同步觸發失敗，請稍後手動在 GitHub Actions 執行 Sync Images From Supabase。</span>';
     productForm.reset();
     selectedFiles = [];
     renderPhotoPreview();
@@ -595,7 +622,12 @@
             console.error('更新失敗:', error);
             alert('修改失敗：' + (error.message || '未知錯誤'));
           } else {
-            alert('商品修改成功！');
+            const syncTriggered = await triggerGithubImageSync();
+            if (syncTriggered) {
+              alert('商品修改成功，已自動觸發圖片同步！');
+            } else {
+              alert('商品修改成功！但圖片同步觸發失敗，請稍後手動在 GitHub Actions 執行 Sync Images From Supabase。');
+            }
             loadProductsFromSupabase();
             const modalInstance = bootstrap.Modal.getInstance(document.getElementById('editProductModal'));
             if (modalInstance) {
