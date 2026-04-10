@@ -58,19 +58,30 @@ def supabase_get(path: str):
 def supabase_patch(path: str, payload: dict):
     url = f"{SUPABASE_URL.rstrip('/')}{path}"
     data = json.dumps(payload, ensure_ascii=False).encode("utf-8")
-    req = urllib.request.Request(
-        url,
-        data=data,
-        method="PATCH",
-        headers={
-            "apikey": SUPABASE_SERVICE_ROLE_KEY,
-            "Authorization": f"Bearer {SUPABASE_SERVICE_ROLE_KEY}",
-            "Content-Type": "application/json",
-            "Prefer": "return=minimal",
-        },
-    )
-    with urllib.request.urlopen(req, timeout=60):
-        return
+    headers = {
+        "apikey": SUPABASE_SERVICE_ROLE_KEY,
+        "Authorization": f"Bearer {SUPABASE_SERVICE_ROLE_KEY}",
+        "Content-Type": "application/json",
+        "Prefer": "return=minimal",
+    }
+    req = urllib.request.Request(url, data=data, method="PATCH", headers=headers)
+    try:
+        with urllib.request.urlopen(req, timeout=60):
+            return
+    except urllib.error.HTTPError as e:
+        # Some Supabase projects may 301 from /table?query to /table/?query.
+        if e.code in (301, 302, 307, 308):
+            redirected_url = e.headers.get("Location")
+            if redirected_url:
+                redirected_req = urllib.request.Request(
+                    redirected_url,
+                    data=data,
+                    method="PATCH",
+                    headers=headers,
+                )
+                with urllib.request.urlopen(redirected_req, timeout=60):
+                    return
+        raise
 
 
 def extract_object_path(url: str):
@@ -154,7 +165,7 @@ def main():
         if new_csv == image_csv:
             continue
         pid = p.get("id")
-        supabase_patch(f"/rest/v1/products?id=eq.{pid}", {"image": new_csv})
+        supabase_patch(f"/rest/v1/products/?id=eq.{pid}", {"image": new_csv})
         updated_rows += 1
         if updated_rows % 20 == 0 or i == total_products:
             print(
